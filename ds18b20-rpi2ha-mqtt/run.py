@@ -9,7 +9,7 @@ def get(sensor=None):
         return
 
     temperature_in_celsius = sensor.get_temperature()
-    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius: .4f}")
+    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius:.4f}")
 
 
 def worker(sensor=None):
