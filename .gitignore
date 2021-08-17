@@ -117,3 +117,4 @@ homeassistant/config/.storage/core.config
 homeassistant/config/.storage/core.config_entries
 homeassistant/config/.storage/person
 venv
+ds-sensors-ha-app-daemon/appdaemon.yaml
