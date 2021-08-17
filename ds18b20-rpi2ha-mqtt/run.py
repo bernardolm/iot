@@ -15,6 +15,6 @@ while True:
     try:
         get()
     except Exception as e:
-        print(3)
+        print(e)
 
     time.sleep(10)
