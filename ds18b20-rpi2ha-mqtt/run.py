@@ -1,16 +1,21 @@
-from w1thermsensor import W1ThermSensor, Unit, Sensor
-from pprint import pprint
 import time
+from pprint import pprint
+
+from w1thermsensor import Sensor, W1ThermSensor
+
 
 def get(sensor=None):
     if sensor is None:
         return
 
     temperature_in_celsius = sensor.get_temperature()
-    print("Sensor %s has temperature %.4f" % (sensor.id, temperature_in_celsius))
+    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius: %.4f}")
+
 
 def main():
-    sensor = W1ThermSensor(sensor_type=Sensor.DS18B20, sensor_id="020391776aaf")
+    sensor = W1ThermSensor(
+        sensor_type=Sensor.DS18B20,
+        sensor_id="020391776aaf")
     pprint(sensor)
     pprint(sensor.__dict__)
 
@@ -25,7 +30,8 @@ def main():
         except Exception as e:
             print(e)
         finally:
-            time.sleep(10)
+            time.sleep(5)
+
 
 if __name__ == "__main__":
     main()
