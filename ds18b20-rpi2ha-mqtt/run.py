@@ -1,7 +1,7 @@
 import time
 from pprint import pprint
 
-from w1thermsensor import Sensor, W1ThermSensor
+from w1thermsensor import W1ThermSensor
 
 
 def get(sensor=None):
@@ -9,7 +9,7 @@ def get(sensor=None):
         return
 
     temperature_in_celsius = sensor.get_temperature()
-    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius: %.4f}")
+    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius: .4f}")
 
 
 def worker(sensor=None):
@@ -31,10 +31,6 @@ def worker(sensor=None):
 
 
 def main():
-    # sensor = W1ThermSensor(
-    #     sensor_type=Sensor.DS18B20,
-    #     sensor_id="020391776aaf")
-
     for sensor in W1ThermSensor.get_available_sensors():
         pprint(sensor)
         pprint(sensor.__dict__)
