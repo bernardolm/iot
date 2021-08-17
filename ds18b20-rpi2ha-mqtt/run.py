@@ -9,12 +9,16 @@ sensor.set_resolution(persist=True)
 
 def get():
     temperature_in_celsius = sensor.get_temperature()
-    print("Sensor %s has temperature %.2f" % (sensor.id, temperature_in_celsius))
+    print("Sensor %s has temperature %.4f" % (sensor.id, temperature_in_celsius))
 
-while True:
-    try:
-        get()
-    except Exception as e:
-        print(e)
+def main():
+    while True:
+        try:
+            get()
+        except Exception as e:
+            print(e)
+        finally:
+            time.sleep(10)
 
-    time.sleep(10)
+if __name__ == "__main__":
+    main()
