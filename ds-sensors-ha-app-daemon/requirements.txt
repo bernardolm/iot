@@ -1,2 +1,2 @@
 w1thermsensor==2.0.0
-appdaemon
+appdaemon==4.0.8
