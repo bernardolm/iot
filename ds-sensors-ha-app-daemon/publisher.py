@@ -8,7 +8,7 @@ class Publisher():
 
     def do(self, value=None):
         if value is None:
-            logging.info('publisher do!')
+            logging.info('publisher has nothing to do...!')
             return
 
         logging.info(f'publisher do with {value}!')

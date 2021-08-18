@@ -11,7 +11,7 @@ class Sensor():
         try:
             self._sensor.set_resolution(9, persist=True)
         except Exception as e:
-            logging.error(self._sensor.id, e)
+            raise Exception(self._sensor.id, e)
 
     def do(self):
         temperature_in_celsius = self._sensor.get_temperature()

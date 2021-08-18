@@ -6,7 +6,6 @@ from publisher import Publisher
 from sensor import Sensor
 from worker import Worker
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -17,10 +16,12 @@ def main():
     for sensor in W1ThermSensor.get_available_sensors():
         logging.debug(sensor)
 
-        s = Sensor(sensor)
-        w = Worker(sensor=s, publisher=p)
-
-        w.do()
+        try:
+            s = Sensor(sensor)
+            w = Worker(sensor=s, publisher=p)
+            w.do()
+        except Exception as e:
+            logging.exception(sensor.id, e)
 
 
 if __name__ == "__main__":

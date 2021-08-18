@@ -20,6 +20,6 @@ class Worker():
                 value = self._sensor.do()
                 self._publisher.do(value)
             except Exception as e:
-                logging.error(e)
+                logging.warning(e)
             finally:
                 time.sleep(5)
