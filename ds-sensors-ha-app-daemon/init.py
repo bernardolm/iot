@@ -7,6 +7,9 @@ from sensor import Sensor
 from worker import Worker
 
 
+logging.basicConfig(level=logging.DEBUG)
+
+
 def main():
     p = Publisher()
     logging.debug(p)
