@@ -3,7 +3,7 @@ import logging
 
 class Sensor():
 
-    def init(self, sensor=None):
+    def __init__(self, sensor=None):
         if sensor is None:
             raise Exception('sensor is required')
         self._sensor = sensor

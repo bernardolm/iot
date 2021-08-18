@@ -4,7 +4,7 @@ import time
 
 class Worker():
 
-    def init(self, sensor=None, publisher=None):
+    def __init__(self, sensor=None, publisher=None):
         if sensor is None:
             raise Exception('sensor is required')
         self._sensor = sensor

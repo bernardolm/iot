@@ -3,7 +3,7 @@ import logging
 
 class Publisher():
 
-    def init(self, sensor=None):
+    def __init__(self, sensor=None):
         pass
 
     def do(self, value=None):
