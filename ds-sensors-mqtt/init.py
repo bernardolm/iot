@@ -10,15 +10,18 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
-    p = Publisher()
-    logging.debug(p)
 
     for sensor in W1ThermSensor.get_available_sensors():
         logging.debug(sensor)
 
         try:
             s = Sensor(sensor)
+            logging.debug(s)
+            p = Publisher(id=s.id())
+            logging.debug(p)
             w = Worker(sensor=s, publisher=p)
+            logging.debug(w)
+
             w.do()
         except Exception as e:
             logging.exception(sensor.id, e)

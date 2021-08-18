@@ -1,6 +1,7 @@
 import logging
 import time
 
+time_interval = 1
 
 class Worker():
 
@@ -22,4 +23,4 @@ class Worker():
             except Exception as e:
                 logging.warning(e)
             finally:
-                time.sleep(5)
+                time.sleep(time_interval)

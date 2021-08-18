@@ -13,6 +13,9 @@ class Sensor():
         except Exception as e:
             raise Exception(self._sensor.id, e)
 
+    def id(self):
+        return self._sensor.id
+
     def do(self):
         temperature_in_celsius = self._sensor.get_temperature()
         logging.debug(
