@@ -2,9 +2,9 @@ import logging
 
 from w1thermsensor import W1ThermSensor
 
-from .publisher import Publisher
-from .sensor import Sensor
-from .worker import Worker
+from publisher import Publisher
+from sensor import Sensor
+from worker import Worker
 
 
 def main():
