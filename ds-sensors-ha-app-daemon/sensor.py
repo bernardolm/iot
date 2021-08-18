@@ -1,9 +1,8 @@
 import time
 from pprint import pprint
 
+from appdaemon.plugins.mqtt import mqttapi as mqtt
 from w1thermsensor import W1ThermSensor
-
-import mqttapi as mqtt
 
 
 class MyApp(mqtt.Mqtt):
