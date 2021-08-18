@@ -10,11 +10,11 @@ from paho.mqtt import client as mqtt_client
 
 class Publisher():
 
-    def __init__(self, id=None):
-        if id is None:
-            id = andom.random()
+    def __init__(self, name=None):
+        if name is None:
+            name = f'ds18b20_unknown_{random.random()}'
 
-        client_id = os.environ.get('MQTT_CLIENT_ID', f'ds-sensors-mqtt_{id}')
+        client_id = os.environ.get('MQTT_CLIENT_ID', f'ds-sensors-mqtt_{name}')
         self._client = mqtt_client.Client(client_id)
 
         user = os.environ.get('MQTT_USER')
@@ -28,14 +28,22 @@ class Publisher():
         self._port = int(os.environ.get('MQTT_PORT', '1883'))
         self._client.connect(self._host, self._port)
 
-        self._state_topic = f'homeassistant/sensor/{id}/state'
-        self._config_topic = f'homeassistant/sensor/{id}/config'
+        self._state_topic = f'homeassistant/sensor/{name}/temperature/state'
+        self._config_topic = f'homeassistant/sensor/{name}/temperature/config'
         self._config_message = json.dumps({
-            'name': id,
+            'device': {
+                'identifiers': [
+                    client_id,
+                ],
+                'model': 'DS18B20',
+                'name': 'DS18B20',
+            },
             'device_class': 'temperature',
+            'name': name,
+            'state_class': 'measurement',
             'state_topic': self._state_topic,
             'unit_of_measurement': '°C',
-            'value_template': '{{value_json.temperature}}'
+            'value_template': '{{ value_json.temperature }}',
         })
         self._config()
 

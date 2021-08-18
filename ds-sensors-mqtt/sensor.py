@@ -13,7 +13,7 @@ class Sensor():
         except Exception as e:
             logging.warning([self._sensor.id, e])
 
-    def id(self):
+    def name(self):
         return self._sensor.id
 
     def do(self):

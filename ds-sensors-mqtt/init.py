@@ -22,7 +22,7 @@ def main():
         try:
             s = Sensor(sensor)
             logging.debug(s)
-            p = Publisher(id=s.id())
+            p = Publisher(name=s.name())
             logging.debug(p)
             w = Worker(sensor=s, publisher=p)
             logging.debug(w)
