@@ -5,7 +5,7 @@ function run () {
     python3 init.py &
     sleep 5
     killall -9 python3
-    run
+    ./test.sh
 }
 
 cd "`dirname \"$0\"`"
