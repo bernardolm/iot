@@ -1,64 +1,21 @@
-import time
-from pprint import pprint
-
-from appdaemon.plugins.mqtt import mqttapi as mqtt
-from w1thermsensor import W1ThermSensor
+import logging
 
 
-class MyApp(mqtt.Mqtt):
+class Sensor():
 
-    def initialize(self):
-        pass
+    def init(self, sensor=None):
+        if sensor is None:
+            raise Exception('sensor is required')
+        self._sensor = sensor
 
-
-def get(app=None, sensor=None):
-    if sensor is None:
-        return
-
-    temperature_in_celsius = sensor.get_temperature()
-    print(f"Sensor {sensor.id} has temperature {temperature_in_celsius:.4f}")
-
-    if app is None:
-        return
-
-    app.mqtt_publish(
-        topic=f"homeassistant/{sensor.id}",
-        payload=temperature_in_celsius,
-        qos=1,
-        retain=True
-    )
-
-
-def worker(app=None, sensor=None):
-    if sensor is None:
-        return
-
-    try:
-        sensor.set_resolution(9, persist=True)
-    except Exception as e:
-        print(sensor.id, e)
-
-    while True:
         try:
-            get(app, sensor)
+            self._sensor.set_resolution(9, persist=True)
         except Exception as e:
-            print(e)
-        finally:
-            time.sleep(5)
+            logging.error(self._sensor.id, e)
 
+    def do(self):
+        temperature_in_celsius = self._sensor.get_temperature()
+        logging.debug(
+            f'Sensor {self._sensor.id} has temperature {temperature_in_celsius:.4f}')
 
-def main():
-    mqtt_cfg = mqtt.get_plugin_config()
-    pprint(mqtt_cfg)
-    pprint(mqtt_cfg.__dict__)
-
-    app = MyApp()
-
-    for sensor in W1ThermSensor.get_available_sensors():
-        pprint(sensor)
-        pprint(sensor.__dict__)
-        worker(app, sensor)
-
-
-if __name__ == "__main__":
-    main()
+        return temperature_in_celsius
