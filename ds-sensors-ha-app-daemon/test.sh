@@ -1,5 +1,5 @@
 #!/bin/bash
 git pull origin master
-sudo python3 sensor.py
+python3 init.py
 sleep 5
 ./test.sh
