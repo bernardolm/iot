@@ -14,7 +14,7 @@ class Worker():
             raise Exception('publisher is required')
         self._publisher = publisher
 
-        self._interval = int(os.environ.get('WORKER_INTERVAL', 1))
+        self._interval = int(os.environ.get('WORKER_INTERVAL', '1'))
 
     def do(self):
         while True:
