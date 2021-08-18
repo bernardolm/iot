@@ -13,11 +13,13 @@ class Publisher():
         if id is None:
             id = andom.random()
 
-        client_id = f'ds-sensors-ha-app-daemon_{id}'
+        client_id = os.environ.get(
+            'MQTT_CLIENT_ID', f'ds-sensors-mqtt_{id}').upper()
         self._client = mqtt_client.Client(client_id)
-        broker = '192.168.15.7'
-        port = 1883
-        self._client.connect(broker, port)
+
+        self._host = os.environ.get('MQTT_HOST', 'localhost').upper()
+        self._port = os.environ.get('MQTT_PORT', 1883).upper()
+        self._client.connect(self._host, self._port)
 
         self._state_topic = f'homeassistant/sensor/{id}/state'
         self._config_topic = f'homeassistant/sensor/{id}/config'
