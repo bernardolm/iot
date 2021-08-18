@@ -1,5 +1,5 @@
 
-install-rpi-deps:
+install:
 	apk update && apk upgrade
 
 	apk fix --no-cache --reinstall \
@@ -39,3 +39,4 @@ install-rpi-deps:
 
 	pip uninstall -y cffi pycparser
 	pip install --upgrade cffi pycparser bcrypt
+	pip install -r requirements.txt
