@@ -11,7 +11,7 @@ class Sensor():
         try:
             self._sensor.set_resolution(9, persist=True)
         except Exception as e:
-            raise Exception(self._sensor.id, e)
+            logging.warning([self._sensor.id, e])
 
     def id(self):
         return self._sensor.id
