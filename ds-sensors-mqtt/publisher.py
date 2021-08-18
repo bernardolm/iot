@@ -17,6 +17,13 @@ class Publisher():
         client_id = os.environ.get('MQTT_CLIENT_ID', f'ds-sensors-mqtt_{id}')
         self._client = mqtt_client.Client(client_id)
 
+        user = os.environ.get('MQTT_USER')
+        password = os.environ.get('MQTT_PASSWORD')
+        if user is not None and password is not None:
+            self._client.username_pw_set(
+                username=user,
+                password=password)
+
         self._host = os.environ.get('MQTT_HOST', 'localhost')
         self._port = int(os.environ.get('MQTT_PORT', '1883'))
         self._client.connect(self._host, self._port)
