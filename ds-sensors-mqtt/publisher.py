@@ -6,6 +6,7 @@ from paho.mqtt import client as mqtt_client
 
 # NOTE: Ref.: https://www.home-assistant.io/docs/mqtt/discovery/
 
+
 class Publisher():
 
     def __init__(self, id=None):
@@ -48,7 +49,7 @@ class Publisher():
 
     def _state(self, value):
         logging.debug(['value is', value])
-        msg = json.dumps({'temperature':value})
+        msg = json.dumps({'temperature': value})
         logging.debug(['message is', msg])
         self._publish(self._state_topic, msg)
 

@@ -1,7 +1,6 @@
 import logging
 import time
 
-time_interval = 1
 
 class Worker():
 
@@ -14,8 +13,9 @@ class Worker():
             raise Exception('publisher is required')
         self._publisher = publisher
 
-    def do(self):
+        self._interval = os.environ.get('WORKER_INTERVAL', 1).upper()
 
+    def do(self):
         while True:
             try:
                 value = self._sensor.do()
@@ -23,4 +23,4 @@ class Worker():
             except Exception as e:
                 logging.warning(e)
             finally:
-                time.sleep(time_interval)
+                time.sleep(self._interval)
