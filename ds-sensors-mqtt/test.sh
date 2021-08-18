@@ -8,4 +8,6 @@ function run () {
     run
 }
 
+cd "`dirname \"$0\"`"
+
 run

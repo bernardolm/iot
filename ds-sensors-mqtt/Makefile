@@ -1,5 +1,5 @@
 
-install:
+install-alpine:
 	apk update && apk upgrade
 
 	apk fix --no-cache --reinstall \
