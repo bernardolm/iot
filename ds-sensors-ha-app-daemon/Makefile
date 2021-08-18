@@ -12,7 +12,7 @@ install-rpi-deps:
 		perl-error \
 		perl-git
 
-	apk fix --no-cache --reinstall \
+	apk add \
 		alpine-sdk \
 		binutils \
 		build-base \
