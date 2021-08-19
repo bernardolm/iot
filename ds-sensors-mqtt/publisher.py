@@ -52,26 +52,26 @@ class Publisher():
         })
         self._config()
 
-    def _log_success_sent(self, topic, value):
-        logging.info(f'sent {value} to topic {topic}')
+    def _log_success_sent(self, topic, message):
+        logging.info(f'sent {message} to topic {topic}')
 
-    def _log_failed_sent(self, topic, value):
-        logging.error(f'failed to send {value} to topic {topic}')
+    def _log_failed_sent(self, topic, message):
+        logging.error(f'failed to send {message} to topic {topic}')
 
-    def _publish(self, topic, value):
-        result = self._client.publish(topic, value)
-        status = result[0]
-        if status == 0:
-            self._log_success_sent(topic, value)
-        else:
-            self._log_failed_sent(topic, value)
-
-    def _config(self):
-        self._publish(
-            topic=self._config_topic,
-            payload=self._config_message,
+    def _publish(self, topic, message):
+        result = self._client.publish(
+            topic=topic,
+            payload=vaue,
             qos=1,
             retain=True)
+        status = result[0]
+        if status == 0:
+            self._log_success_sent(topic, message)
+        else:
+            self._log_failed_sent(topic, message)
+
+    def _config(self):
+        self._publish(self._config_topic, self._config_message)
 
     def _state(self, value):
         logging.debug(['value is', value])
@@ -81,9 +81,9 @@ class Publisher():
 
     def do(self, value=None):
         if value is None:
-            logging.info('publisher has nothing to do...!')
+            logging.debug('publisher has nothing to do...!')
             return
 
-        logging.info(f'publishing {value}!')
+        logging.debug(f'publishing {value}!')
 
         self._state(value)
