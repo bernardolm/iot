@@ -42,6 +42,7 @@ class Publisher():
             'name': sensor_name,
             'state_class': 'measurement',
             'state_topic': self._state_topic,
+            'unique_id': f'{sensor_name}_{random.randint(100,999)}',
             'unit_of_measurement': '°C',
             'value_template': '{{ value_json.temperature }}',
         })
