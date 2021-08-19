@@ -15,7 +15,7 @@ class Publisher():
             raise Exception('sensor name is required')
 
         client_id = os.environ.get('MQTT_CLIENT_ID', sensor_name)
-        self._client = mqtt_client.Client(client_id)
+        self._client = mqtt_client.Client(f'{sensor_name}_client_id')
 
         user = os.environ.get('MQTT_USER')
         password = os.environ.get('MQTT_PASSWORD')
@@ -33,16 +33,16 @@ class Publisher():
         self._config_message = json.dumps({
             'device': {
                 'identifiers': [
-                    sensor_name,
+                    f'{sensor_name}_identifier',
                 ],
                 'model': 'DS18B20',
-                'name': sensor_name,
+                'name': f'{sensor_name}_device_name',
             },
             'device_class': 'temperature',
-            'name': sensor_name,
+            'name': f'{sensor_name}_name',
             'state_class': 'measurement',
             'state_topic': self._state_topic,
-            'unique_id': f'{sensor_name}_{random.randint(100,999)}',
+            'unique_id': f'{sensor_name}_{random.randint(1000,9999)}_unique_id',
             'unit_of_measurement': '°C',
             'value_template': '{{ value_json.temperature }}',
         })
