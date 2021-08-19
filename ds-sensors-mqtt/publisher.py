@@ -52,32 +52,32 @@ class Publisher():
         })
         self._config()
 
-    def _log_success_sent(self, topic, message):
-        logging.info(f'sent {message} to topic {topic}')
+    def _log_success_sent(self, topic, payload):
+        logging.info(f'sent {payload} to topic {topic}')
 
-    def _log_failed_sent(self, topic, message):
-        logging.error(f'failed to send {message} to topic {topic}')
+    def _log_failed_sent(self, topic, payload):
+        logging.error(f'failed to send {payload} to topic {topic}')
 
-    def _publish(self, topic, message):
+    def _publish(self, topic, payload):
         result = self._client.publish(
             topic=topic,
-            payload=vaue,
+            payload=payload,
             qos=1,
             retain=True)
         status = result[0]
         if status == 0:
-            self._log_success_sent(topic, message)
+            self._log_success_sent(topic, payload)
         else:
-            self._log_failed_sent(topic, message)
+            self._log_failed_sent(topic, payload)
 
     def _config(self):
         self._publish(self._config_topic, self._config_message)
 
     def _state(self, value):
         logging.debug(['value is', value])
-        msg = json.dumps({'temperature': value})
-        logging.debug(['message is', msg])
-        self._publish(self._state_topic, msg)
+        payload = json.dumps({'temperature': value})
+        logging.debug(['message is', payload])
+        self._publish(self._state_topic, payload)
 
     def do(self, value=None):
         if value is None:
