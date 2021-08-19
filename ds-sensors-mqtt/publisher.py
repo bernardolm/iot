@@ -62,7 +62,6 @@ class Publisher():
         result = self._client.publish(
             topic=topic,
             payload=payload,
-            qos=1,
             retain=True)
         status = result[0]
         if status == 0:
