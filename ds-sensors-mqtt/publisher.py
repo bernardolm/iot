@@ -30,6 +30,8 @@ class Publisher():
 
         self._state_topic = f'homeassistant/sensor/{sensor_name}/temperature/state'
         self._config_topic = f'homeassistant/sensor/{sensor_name}/temperature/config'
+
+        rand = random.randint(1000, 9999)
         self._config_message = json.dumps({
             'device': {
                 'identifiers': [
@@ -39,10 +41,11 @@ class Publisher():
                 'name': f'{sensor_name}_device_name',
             },
             'device_class': 'temperature',
-            'name': f'{sensor_name}_name',
+            'name': sensor_name,
+            'friendly_name': f'Temperature from DS18B20 ({rand})',
             'state_class': 'measurement',
             'state_topic': self._state_topic,
-            'unique_id': f'{sensor_name}_{random.randint(1000,9999)}_unique_id',
+            'unique_id': f'{sensor_name}_{rand}_unique_id',
             'unit_of_measurement': '°C',
             'value_template': '{{ value_json.temperature }}',
         })
