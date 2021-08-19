@@ -35,15 +35,14 @@ class Publisher():
         self._config_message = json.dumps({
             'device': {
                 'identifiers': [
-                    f'{sensor_name}_identifier',
+                    f'{sensor_name}_device_identifier',
                 ],
                 'model': 'DS18B20',
                 'name': f'{sensor_name}_device_name',
-                'unique_id': f'{sensor_name}_{rand}_unique_id',
             },
             'device_class': 'temperature',
-            'friendly_name': f'Temperature from DS18B20 ({rand})',
-            'name': sensor_name,
+            'friendly_name': f'Temperature from DS18B20',
+            'name': 'DS18B20 sensor',
             'state_class': 'measurement',
             'state_topic': self._state_topic,
             'unique_id': f'{sensor_name}_{rand}_unique_id',
