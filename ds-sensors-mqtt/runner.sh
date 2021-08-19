@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "$SSLEEP_BY" == "" ]] && SLEEP_BY=5
+[[ "$SSLEEP_BY" == "" ]] && SLEEP_BY=300
 
 function run () {
     git pull origin master > /dev/null 2>&1
