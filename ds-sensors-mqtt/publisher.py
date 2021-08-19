@@ -42,6 +42,7 @@ class Publisher():
             },
             'device_class': 'temperature',
             'name': 'DS18B20 sensor',
+            'retain': True,
             'state_class': 'measurement',
             'state_topic': self._state_topic,
             'unique_id': f'{sensor_name}_{rand}_unique_id',
