@@ -67,7 +67,11 @@ class Publisher():
             self._log_failed_sent(topic, value)
 
     def _config(self):
-        self._publish(self._config_topic, self._config_message)
+        self._publish(
+            topic=self._config_topic,
+            payload=self._config_message,
+            qos=1,
+            retain=True)
 
     def _state(self, value):
         logging.debug(['value is', value])
