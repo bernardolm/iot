@@ -41,7 +41,6 @@ class Publisher():
                 'name': f'{sensor_name}_device_name',
             },
             'device_class': 'temperature',
-            'friendly_name': f'Temperature from DS18B20',
             'name': 'DS18B20 sensor',
             'state_class': 'measurement',
             'state_topic': self._state_topic,
