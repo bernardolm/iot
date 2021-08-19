@@ -14,7 +14,7 @@ class Sensor():
             logging.warning([self._sensor.id, e])
 
     def name(self):
-        return self._sensor.id
+        return f'DS18B20_{self._sensor.id}'
 
     def do(self):
         temperature_in_celsius = self._sensor.get_temperature()
