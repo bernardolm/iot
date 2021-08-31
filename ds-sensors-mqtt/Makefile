@@ -42,14 +42,17 @@ install-alpine:
 	pip install -r requirements.txt
 
 setup:
+	@echo 'installing app...'
 	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
 	@unzip -qq -o master.zip
 	@cp -r iot-master/* ../
 	@rm -rf iot-master master.zip
 	@pip install -r requirements.txt
 	@pip install .
+	@echo 'finish app install'
 
 start: setup
+	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/init.py
 
 supervisor:
