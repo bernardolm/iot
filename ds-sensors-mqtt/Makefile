@@ -49,4 +49,4 @@ start: setup
 	@python3 src/ds_sensors_mqtt/init.py
 
 supervisor:
-	@venv/bin/supervisord -c supervisord.conf
+	@supervisord -c supervisord.conf
