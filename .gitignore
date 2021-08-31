@@ -118,3 +118,4 @@ homeassistant/config/.storage/core.config_entries
 homeassistant/config/.storage/person
 venv
 **/config.env
+**/*.zip

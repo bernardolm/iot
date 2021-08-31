@@ -42,8 +42,10 @@ install-alpine:
 	pip install -r requirements.txt
 
 setup:
-	@git stash
-	@git pull origin master
+	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
+	@unzip -o master.zip
+	@cp -r iot-master/* ../
+	@rm -rf iot-master
 	@pip install -r requirements.txt
 	@pip install .
 
