@@ -25,3 +25,6 @@ class Worker():
                 logging.warning(e)
             finally:
                 time.sleep(self._interval)
+                if os.environ.get('WORKER_RUN_ONCE') in ['true', 'True', '1']:
+                    logging.debug('once run, exiting')
+                    break
