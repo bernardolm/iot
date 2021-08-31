@@ -22,9 +22,9 @@ class Worker():
                 value = self._sensor.do()
                 self._publisher.do(value)
             except Exception as e:
-                logging.warning(e)
+                logging.exception(e)
             finally:
                 time.sleep(self._interval)
                 if os.environ.get('WORKER_RUN_ONCE') in ['true', 'True', '1']:
-                    logging.debug('once run, exiting')
+                    logging.info('once run, exiting')
                     break

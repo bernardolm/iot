@@ -19,15 +19,14 @@ def main():
 
     debug = os.environ.get('DEBUG') in ['true', 'True', '1']
 
+    logging.info(f'running in {"debug" if debug else "normal"} mode...')
+
     if debug:
-        logging.warning('running in debug mode')
         from src.ds_sensors_mqtt.mock import MqttClient, Sensor, Sensors
     else:
         from src.ds_sensors_mqtt.mqtt import MqttClient
         from src.ds_sensors_mqtt.sensor import Sensor
         from src.ds_sensors_mqtt.sensors import Sensors
-
-    logging.info(f'running in {"debug" if debug else "normal"} mode...')
 
     jobs = []
     event = multiprocessing.Event()
@@ -61,11 +60,11 @@ def main():
 
     while True:
         if event.is_set():
-            logging.warning('event is set, terminating jobs')
+            logging.warning('event is set, terminating jobs...')
             for i in jobs:
                 logging.warning(f'terminating job {i}')
                 i.terminate()
-            logging.warning('calling sys exit')
+            logging.warning('exiting')
             sys.exit()
         time.sleep(5)
 

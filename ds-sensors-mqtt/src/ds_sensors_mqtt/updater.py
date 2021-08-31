@@ -17,7 +17,7 @@ class Updater():
 
         @app.route("/")        # Standard Flask endpoint
         def ping():
-            logging.debug('got ping')
+            logging.info('got ping')
             event.set()
             return 'OK'
 
@@ -25,11 +25,11 @@ class Updater():
 
         @webhook.hook()
         def on_push(data):
-            logging.debug('got github push')
+            logging.info('got github push')
             event.set()
             return 'OK'
 
         port = int(os.environ.get('UPDATER_PORT', '9345'))
-        logging.debug(f'running http server to updater in port {port}')
+        logging.info(f'running http server to updater in port {port}')
 
         app.run(host="0.0.0.0", port=port)

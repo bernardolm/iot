@@ -11,14 +11,14 @@ class Sensor():
         try:
             self._sensor.set_resolution(9, persist=True)
         except Exception as e:
-            logging.warning([self._sensor.id, e])
+            logging.exception([self._sensor.id, e])
 
     def name(self):
         return f'DS18B20_{self._sensor.id}'
 
     def do(self):
         temperature_in_celsius = self._sensor.get_temperature()
-        logging.debug(
-            f'Sensor {self._sensor.id} has temperature {temperature_in_celsius:.4f}')
+        logging.info(
+            f'sensor {self._sensor.id} has temperature {temperature_in_celsius:.4f}')
 
         return temperature_in_celsius
