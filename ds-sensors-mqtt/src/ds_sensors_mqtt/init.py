@@ -51,7 +51,7 @@ def main():
             jobs.append(p)
 
         except Exception as e:
-            logging.exception(sensor.id, e)
+            logging.exception([sensor.id, e])
 
     u = Updater()
     p = multiprocessing.Process(target=u.do, args=(event,))
