@@ -20,6 +20,7 @@ def main():
     debug = os.environ.get('DEBUG') in ['true', 'True', '1']
 
     if debug:
+        logging.warning('running in debug mode')
         from src.ds_sensors_mqtt.mock import MqttClient, Sensor, Sensors
     else:
         from src.ds_sensors_mqtt.mqtt import MqttClient
