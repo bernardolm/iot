@@ -46,3 +46,6 @@ start:
 	@pip install -r requirements.txt
 	@pip install .
 	@python3 src/ds_sensors_mqtt/init.py
+
+supervisor:
+	@venv/bin/supervisord -c supervisord.conf

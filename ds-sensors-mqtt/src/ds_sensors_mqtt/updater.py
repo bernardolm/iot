@@ -18,7 +18,7 @@ class Updater():
 
         @webhook.hook()
         def on_push(data):
-            logging.debug("Got push with: {0}".format(data))
+            logging.debug('got github push')
             self._event.set()
 
         app.run(host="0.0.0.0", port=int(os.environ.get('UPDATER_PORT', 8234)))
