@@ -43,7 +43,7 @@ install-alpine:
 
 setup:
 	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
-	@unzip -o master.zip
+	@unzip -qq -o master.zip
 	@cp -r iot-master/* ../
 	@rm -rf iot-master
 	@pip install -r requirements.txt
