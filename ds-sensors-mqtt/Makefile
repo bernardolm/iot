@@ -41,10 +41,11 @@ install-alpine:
 	pip install --upgrade cffi pycparser bcrypt
 	pip install -r requirements.txt
 
-
-start:
+setup:
 	@pip install -r requirements.txt
 	@pip install .
+
+start: setup
 	@python3 src/ds_sensors_mqtt/init.py
 
 supervisor:

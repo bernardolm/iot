@@ -53,15 +53,19 @@ def main():
         except Exception as e:
             logging.exception(sensor.id, e)
 
-    u = Updater(event)
-    p = multiprocessing.Process(target=u.do)
+    u = Updater()
+    p = multiprocessing.Process(target=u.do, args=(event,))
     p.start()
+    jobs.append(p)
 
     while True:
         if event.is_set():
+            logging.warning('event is set, terminating jobs')
             for i in jobs:
+                logging.warning(f'terminating job {i}')
                 i.terminate()
-            sys.exit(1)
+            logging.warning('calling sys exit')
+            sys.exit()
         time.sleep(5)
 
 
