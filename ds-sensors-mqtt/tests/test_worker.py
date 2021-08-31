@@ -1,24 +1,11 @@
 import logging
 import os
 import unittest
-from testfixtures import LogCapture
+
+from src.ds_sensors_mqtt.mock import MqttClient, Sensor, Sensors
 from src.ds_sensors_mqtt.publisher import Publisher
 from src.ds_sensors_mqtt.worker import Worker
-
-
-class SensorMock():
-
-    def name(self):
-        return 'DS18A20_test'
-
-    def do(self):
-        return 23.4567
-
-
-class MqttClientMock():
-
-    def publish(self, topic, payload, retain):
-        return 0
+from testfixtures import LogCapture
 
 
 class TestWorker(unittest.TestCase):
@@ -28,16 +15,16 @@ class TestWorker(unittest.TestCase):
         os.environ['WORKER_INTERVAL'] = '0'
         os.environ['WORKER_RUN_ONCE'] = 'true'
 
-        mc = MqttClientMock()
+        mc = MqttClient()
 
-        s = SensorMock()
+        s = Sensor()
 
         p = Publisher(sensor_name=s.name(), mqtt_client=mc)
 
         w = Worker(sensor=s, publisher=p)
 
         with LogCapture() as logs:
-            w.do()
+            await w.do()
 
         print(str(logs))
 
