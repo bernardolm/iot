@@ -61,7 +61,7 @@ def main():
         if event.is_set():
             for i in jobs:
                 i.terminate()
-            sys.exit(0)
+            sys.exit(1)
         time.sleep(5)
 
 
