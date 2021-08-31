@@ -42,6 +42,8 @@ install-alpine:
 	pip install -r requirements.txt
 
 setup:
+	@git stash
+	@git pull origin master
 	@pip install -r requirements.txt
 	@pip install .
 
