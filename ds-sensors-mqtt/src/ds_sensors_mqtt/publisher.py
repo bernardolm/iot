@@ -56,7 +56,7 @@ class Publisher():
                 ],
                 'manufacturer': 'Unknown',
                 'model': 'ds18b20',
-                'name': 'ds18b20 temperature sensor',
+                'name': self._sensor_name,
                 'sw_version': 'ds18b20 0.0.1'
             },
             'device_class': 'temperature',
@@ -65,7 +65,7 @@ class Publisher():
             'name': self._sensor_name,
             'state_class': 'measurement',
             'state_topic': self._state_topic,
-            'unique_id': f'ds18b20_{self._sensor_name}',
+            'unique_id': f'{self._sensor_name}_temperature_ds18b20',
             'unit_of_measurement': '°C',
             'value_template': '{{ value_json.temperature }}',
         })
