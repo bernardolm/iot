@@ -1,4 +1,5 @@
 import logging
+import time
 
 
 class Sensor():
@@ -17,8 +18,14 @@ class Sensor():
         return f'DS18B20_{self._sensor.id}'
 
     def do(self):
-        temperature_in_celsius = self._sensor.get_temperature()
-        logging.info(
-            f'sensor {self._sensor.id} has temperature {temperature_in_celsius:.4f}')
+        try:
+            temperature_in_celsius = self._sensor.get_temperature()
+            logging.info(
+                f'sensor {self._sensor.id} has temperature {temperature_in_celsius:.4f}')
+        except Exception as e:
+            logging.exception(
+                ['sensor yet unavailable, trying again soon...', e])
+            time.sleep(3)
+            return self.do()
 
         return temperature_in_celsius
