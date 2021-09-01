@@ -9,7 +9,7 @@ class MqttClient():
 
     def __init__(self):
         client_id = os.environ.get('MQTT_CLIENT_ID', socket.gethostname())
-        self._client = Client(sensor_name)
+        self._client = Client(client_id)
         self._client.enable_logger(logger=logging)
 
         user = os.environ.get('MQTT_USER')
