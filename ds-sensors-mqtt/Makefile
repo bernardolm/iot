@@ -43,7 +43,10 @@ install-alpine:
 
 kill:
 	@echo 'killing zombie process...'
-	-@for l in $(ps aux | grep src/ds_sensors_mqtt/init.py | grep -v grep | awk '{print $2}'); do kill -9 $l; done
+	-@for l in $(ps aux | grep src/ds_sensors_mqtt/init.py | grep -v grep | awk '{print $2}'); do \
+		echo "killing process $l"; \
+		kill -9 $l; \
+	done
 
 setup:
 	@echo 'installing app...'
@@ -54,7 +57,7 @@ setup:
 	@pip install .
 	@echo 'finish app install'
 
-start: setup kill
+start: setup kill kill
 	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/init.py
 
