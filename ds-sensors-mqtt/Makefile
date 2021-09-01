@@ -42,6 +42,7 @@ install-alpine:
 	pip install -r requirements.txt
 
 kill:
+	@echo 'killing zombie process...'
 	@kill $(ps aux | grep ds_sensors_mqtt/init.py | awk '{ print $2 }')
 
 setup:
