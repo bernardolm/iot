@@ -15,7 +15,8 @@ class Sensor():
             logging.exception([self._sensor.id, e])
 
     def name(self):
-        return f'DS18B20_{self._sensor.id}'
+        self.do()
+        return self._sensor.id
 
     def do(self):
         try:
