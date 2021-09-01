@@ -41,27 +41,34 @@ install-alpine:
 	pip install --upgrade cffi pycparser bcrypt
 	pip install -r requirements.txt
 
-setup:
+install:
 	@echo 'installing app...'
-	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
-	@unzip -qq -o master.zip
-	@cp -r iot-master/* ../
-	@rm -rf iot-master master.zip
-	@pip install .
+	# @curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
+	# @unzip -qq -o master.zip
+	# @cp -r iot-master/* ../
+	# @rm -rf iot-master master.zip
 	@echo 'finish app install'
+
+setup:
+	@pip install .
 
 kill:
 	@echo 'killing zombie process...'
-	-@for l in $(ps aux | grep src/ds_sensors_mqtt/init.py | grep -v grep | awk '{print $2}'); do \
+	-@for l in $(ps aux | grep src/ds_sensors_mqtt/main.py | grep -v grep | awk '{print $2}'); do \
 		echo "killing process $l"; \
 		kill -9 $l; \
 	done
 
-start:
+start: setup
 	@echo 'starting app...'
-	@python3 src/ds_sensors_mqtt/init.py
+	@python3 src/ds_sensors_mqtt/main.py
 
 supervisor:
 	@supervisord -c supervisord.conf
 
-supervisor-program: setup kill start
+supervisor-program: install setup kill start
+
+mosquitto:
+	@docker run --rm -it -p 1883:1883 -p 9001:9001 \
+		-v $(PWD)/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+		--name mosquitto eclipse-mosquitto
