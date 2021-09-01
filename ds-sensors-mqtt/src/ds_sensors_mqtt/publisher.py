@@ -7,15 +7,15 @@ import os
 
 class Publisher():
 
-    def __init__(self, sensor_name=None, mqtt_client=None):
-        if sensor_name is None:
-            raise Exception('sensor name is required')
+    def __init__(self, meansurer=None, mqtt_client=None):
+        if meansurer is None:
+            raise Exception('meansurer is required')
 
         self._availability_topic = f'ds18b20/bridge/state'
-        self._config_topic = f'homeassistant/sensor/{sensor_name}/temperature/config'
+        self._config_topic = f'homeassistant/sensor/{meansurer.name}/temperature/config'
+        self._meansurer = meansurer
         self._mqtt_client = mqtt_client
-        self._sensor_name = sensor_name
-        self._state_topic = f'ds18b20/{sensor_name}'
+        self._state_topic = f'ds18b20/{meansurer.name}'
 
         self._config()
         self._availability()
@@ -25,7 +25,6 @@ class Publisher():
 
     def _log_failed_sent(self, topic, payload):
         logging.error(f'failed to send {payload} to topic {topic}')
-        self._mqtt_client.connect()
 
     def _publish(self, topic, payload):
         if self._mqtt_client is None:
@@ -44,6 +43,8 @@ class Publisher():
 
     def _config(self):
         # NOTE: Ref.: https://www.home-assistant.io/docs/mqtt/discovery/
+        id = f'ds18b20_temperature_sensor_{self._meansurer.name}'
+        name = 'ds18b20 temperature sensor'
         payload = json.dumps({
             'availability': [
                 {
@@ -52,19 +53,19 @@ class Publisher():
             ],
             'device': {
                 'identifiers': [
-                    f'ds18b20_{self._sensor_name}',
+                    id,
                 ],
                 'manufacturer': 'Unknown',
                 'model': 'ds18b20',
-                'name': self._sensor_name,
+                'name': name,
                 'sw_version': 'ds18b20 0.0.1'
             },
             'device_class': 'temperature',
             'json_attributes_topic': self._state_topic,
-            'name': self._sensor_name,
+            'name': f'{name} ({self._meansurer.name})',
             'state_class': 'measurement',
             'state_topic': self._state_topic,
-            'unique_id': f'{self._sensor_name}_temperature_ds18b20',
+            'unique_id': id,
             'unit_of_measurement': '°C',
             'value_template': '{{ value_json.temperature }}',
         })
@@ -77,11 +78,7 @@ class Publisher():
         payload = json.dumps({'temperature': value})
         self._publish(self._state_topic, payload)
 
-    def do(self, value=None):
-        if value is None:
-            logging.debug('publisher has nothing to do...!')
-            return
-
+    def do(self):
+        value = self._meansurer.value()
         logging.debug(f'publishing {value}!')
-
         self._state(value)
