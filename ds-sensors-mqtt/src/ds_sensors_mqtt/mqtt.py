@@ -1,13 +1,15 @@
-import os
 import logging
+import os
+import socket
+
 from paho.mqtt.client import Client
 
 
 class MqttClient():
 
-    def __init__(self, sensor_name=None):
-        client_id = os.environ.get('MQTT_CLIENT_ID', sensor_name)
-        self._client = Client(f'{sensor_name}_client_id')
+    def __init__(self):
+        client_id = os.environ.get('MQTT_CLIENT_ID', socket.gethostname())
+        self._client = Client(sensor_name)
         self._client.enable_logger(logger=logging)
 
         user = os.environ.get('MQTT_USER')
