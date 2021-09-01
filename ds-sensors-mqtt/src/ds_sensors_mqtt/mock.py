@@ -1,3 +1,5 @@
+import random
+
 
 class Sensor():
 
@@ -5,10 +7,10 @@ class Sensor():
         pass
 
     def name(self):
-        return 'DS18A20_test'
+        return f'test_{random.randint(1000, 9999)}'
 
     def do(self):
-        return 23.4567
+        return random.randint(12, 35) + (random.randint(100, 999)/100)
 
 
 class MqttClient():
@@ -21,7 +23,6 @@ class Sensors():
 
     def __init__(self):
         self.id = 1234
-        pass
 
     def list(self):
         return [self]
