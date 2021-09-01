@@ -41,6 +41,9 @@ install-alpine:
 	pip install --upgrade cffi pycparser bcrypt
 	pip install -r requirements.txt
 
+kill:
+	@kill $(ps aux | grep ds_sensors_mqtt/init.py | awk '{ print $2 }')
+
 setup:
 	@echo 'installing app...'
 	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
@@ -50,7 +53,7 @@ setup:
 	@pip install .
 	@echo 'finish app install'
 
-start: setup
+start: kill setup
 	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/init.py
 
