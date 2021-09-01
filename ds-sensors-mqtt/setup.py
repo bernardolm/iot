@@ -11,6 +11,7 @@ setup(
     version="0.0.1",
     install_requires=reqs,
     packages=[
-        "src.ds_sensors_mqtt"
+        "src.ds_sensors_mqtt",
+        "src.ds_sensors_mqtt.mocks"
     ]
 )
