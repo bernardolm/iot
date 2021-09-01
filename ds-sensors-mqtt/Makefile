@@ -54,7 +54,7 @@ setup:
 	@pip install .
 	@echo 'finish app install'
 
-start: kill setup
+start: setup kill
 	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/init.py
 
