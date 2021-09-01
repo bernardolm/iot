@@ -60,7 +60,6 @@ class Publisher():
                 'sw_version': 'ds18b20 0.0.1'
             },
             'device_class': 'temperature',
-            'friendly_name': 'ds18b20 temperature sensor',
             'json_attributes_topic': self._state_topic,
             'name': self._sensor_name,
             'state_class': 'measurement',
