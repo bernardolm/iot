@@ -47,7 +47,7 @@ setup:
 	@unzip -qq -o master.zip
 	@cp -r iot-master/* ../
 	@rm -rf iot-master master.zip
-	@pip install -r requirements.txt
+	# @pip install -r requirements.txt
 	@pip install .
 	@echo 'finish app install'
 
