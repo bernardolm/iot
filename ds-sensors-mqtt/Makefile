@@ -41,13 +41,6 @@ install-alpine:
 	pip install --upgrade cffi pycparser bcrypt
 	pip install -r requirements.txt
 
-kill:
-	@echo 'killing zombie process...'
-	-@for l in $(ps aux | grep src/ds_sensors_mqtt/init.py | grep -v grep | awk '{print $2}'); do \
-		echo "killing process $l"; \
-		kill -9 $l; \
-	done
-
 setup:
 	@echo 'installing app...'
 	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
@@ -57,9 +50,18 @@ setup:
 	@pip install .
 	@echo 'finish app install'
 
-start: setup kill kill
+kill:
+	@echo 'killing zombie process...'
+	-@for l in $(ps aux | grep src/ds_sensors_mqtt/init.py | grep -v grep | awk '{print $2}'); do \
+		echo "killing process $l"; \
+		kill -9 $l; \
+	done
+
+start:
 	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/init.py
 
 supervisor:
 	@supervisord -c supervisord.conf
+
+supervisor-program: setup kill start
