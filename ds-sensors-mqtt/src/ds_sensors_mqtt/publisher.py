@@ -25,6 +25,7 @@ class Publisher():
 
     def _log_failed_sent(self, topic, payload):
         logging.error(f'failed to send {payload} to topic {topic}')
+        self._mqtt_client.connect()
 
     def _publish(self, topic, payload):
         if self._mqtt_client is None:

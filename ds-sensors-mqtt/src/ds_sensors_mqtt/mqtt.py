@@ -19,7 +19,7 @@ class MqttClient():
 
         self._host = os.environ.get('MQTT_HOST', 'localhost')
         self._port = int(os.environ.get('MQTT_PORT', '1883'))
-        self._client.connect(self._host, self._port)
+        self.connect()
 
     def publish(self, topic, payload, retain):
         result = self._client.publish(
@@ -27,3 +27,6 @@ class MqttClient():
             payload=payload,
             retain=retain)
         return result[0]
+
+    def connect(self):
+        self._client.connect(self._host, self._port)
