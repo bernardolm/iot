@@ -26,7 +26,7 @@ class Sensor():
         except Exception as e:
             logging.exception(
                 ['sensor yet unavailable, trying again soon...', e])
-            time.sleep(3)
+            time.sleep(5)
             return self.do()
 
         return temperature_in_celsius

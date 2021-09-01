@@ -12,7 +12,6 @@ from src.ds_sensors_mqtt.worker import Worker
 
 
 def main():
-
     load_dotenv('config.env', override=True)
     log_level = os.environ.get('LOG_LEVEL', 'INFO').upper()
     logging.basicConfig(level=log_level)
@@ -60,7 +59,8 @@ def main():
 
     while True:
         if event.is_set():
-            logging.warning('event is set, terminating jobs...')
+            logging.warning(
+                'multiprocessing event is set, terminating jobs...')
             for i in jobs:
                 logging.warning(f'terminating job {i}')
                 i.terminate()
