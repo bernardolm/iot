@@ -23,14 +23,14 @@ else
 	@echo 'nothing to kill'
 endif
 
-start: setup
+start: setup kill
 	@echo 'starting app...'
 	@python3 src/ds_sensors_mqtt/main.py
 
 supervisor:
 	@supervisord -c supervisord.conf
 
-supervisor-program: install setup kill start
+supervisor-program: install start
 
 mosquitto:
 	@docker run --rm -it -p 1883:1883 -p 9001:9001 \
