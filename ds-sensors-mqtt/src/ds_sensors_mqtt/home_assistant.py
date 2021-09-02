@@ -5,7 +5,7 @@ import os
 # NOTE: Ref.: https://www.home-assistant.io/docs/mqtt/discovery/
 
 
-class Publisher():
+class HomeAssistant():
 
     def __init__(self, meansurer=None, mqtt_client=None):
         if meansurer is None:
@@ -23,9 +23,8 @@ class Publisher():
     def _publish(self, topic, payload):
         if self._mqtt_client is None:
             logging.warning(f'mqtt client not configured, send only to stdout')
-            status = 0
         else:
-            status = self._mqtt_client.publish(
+            self._mqtt_client.publish(
                 topic=topic,
                 payload=payload,
                 retain=True)

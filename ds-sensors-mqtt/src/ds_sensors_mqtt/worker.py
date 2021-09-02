@@ -5,17 +5,17 @@ import time
 
 class Worker():
 
-    def __init__(self, publisher=None):
-        if publisher is None:
-            raise Exception('publisher is required')
+    def __init__(self, home_assistant=None):
+        if home_assistant is None:
+            raise Exception('home_assistant is required')
 
-        self._publisher = publisher
+        self._home_assistant = home_assistant
         self._interval = int(os.environ.get('WORKER_INTERVAL', '15'))
 
     def do(self):
         while True:
             try:
-                self._publisher.do()
+                self._home_assistant.do()
             except Exception as e:
                 logging.exception(e)
             finally:

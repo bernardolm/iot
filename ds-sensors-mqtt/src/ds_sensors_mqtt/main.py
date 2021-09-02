@@ -6,8 +6,8 @@ import threading
 import time
 
 from dotenv import load_dotenv
+from src.ds_sensors_mqtt.home_assistant import HomeAssistant
 from src.ds_sensors_mqtt.mqtt import Client
-from src.ds_sensors_mqtt.publisher import Publisher
 from src.ds_sensors_mqtt.updater import Updater
 from src.ds_sensors_mqtt.worker import Worker
 
@@ -40,10 +40,10 @@ def main():
             m = Measurer(sensor)
             logging.debug(m)
 
-            p = Publisher(meansurer=m, mqtt_client=mc)
-            logging.debug(p)
+            ha = HomeAssistant(meansurer=m, mqtt_client=mc)
+            logging.debug(ha)
 
-            w = Worker(publisher=p)
+            w = Worker(home_assistant=ha)
             logging.debug(w)
 
             p = multiprocessing.Process(target=w.do)

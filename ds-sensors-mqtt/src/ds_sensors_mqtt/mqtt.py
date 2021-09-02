@@ -3,20 +3,20 @@ import os
 import socket
 import time
 
-from paho.mqtt.client import Client
+from paho.mqtt.client import Client as PahoMqttClient
 
 
-class MqttClient():
+class Client():
 
     def __init__(self):
         client_id = os.environ.get('MQTT_CLIENT_ID', socket.gethostname())
-        self._client = Client(client_id)
-        self._client.enable_logger(logger=logging)
+        self._paho_mqtt_client = PahoMqttClient(client_id)
+        self._paho_mqtt_client.enable_logger(logger=logging)
 
         user = os.environ.get('MQTT_USER')
         password = os.environ.get('MQTT_PASSWORD')
         if user is not None and password is not None:
-            self._client.username_pw_set(
+            self._paho_mqtt_client.username_pw_set(
                 username=user,
                 password=password)
 
@@ -32,7 +32,7 @@ class MqttClient():
 
     def publish(self, topic, payload, retain):
         try:
-            result = self._client.publish(
+            result = self._paho_mqtt_client.publish(
                 topic=topic,
                 payload=payload,
                 retain=retain)
@@ -52,4 +52,4 @@ class MqttClient():
             self.publish(topic, payload, retain)
 
     def connect(self):
-        self._client.connect(self._host, self._port)
+        self._paho_mqtt_client.connect(self._host, self._port)
