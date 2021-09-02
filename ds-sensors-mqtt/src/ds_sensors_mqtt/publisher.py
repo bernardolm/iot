@@ -17,14 +17,8 @@ class Publisher():
         self._mqtt_client = mqtt_client
         self._state_topic = f'ds18b20/{meansurer.name}'
 
-        self._config()
         self._availability()
-
-    def _log_success_sent(self, topic, payload):
-        logging.info(f'sent {payload} to topic {topic}')
-
-    def _log_failed_sent(self, topic, payload):
-        logging.error(f'failed to send {payload} to topic {topic}')
+        self._config()
 
     def _publish(self, topic, payload):
         if self._mqtt_client is None:
@@ -35,11 +29,6 @@ class Publisher():
                 topic=topic,
                 payload=payload,
                 retain=True)
-
-        if status == 0:
-            self._log_success_sent(topic, payload)
-        else:
-            self._log_failed_sent(topic, payload)
 
     def _config(self):
         # NOTE: Ref.: https://www.home-assistant.io/docs/mqtt/discovery/
@@ -80,5 +69,4 @@ class Publisher():
 
     def do(self):
         value = self._meansurer.value()
-        logging.debug(f'publishing {value}!')
         self._state(value)

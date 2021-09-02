@@ -24,13 +24,27 @@ class MqttClient():
         self._port = int(os.environ.get('MQTT_PORT', '1883'))
         self.connect()
 
+    def _log_success_sent(self, topic, payload):
+        logging.info(f'sent {payload} to topic {topic}')
+
+    def _log_failed_sent(self, topic, payload):
+        logging.error(f'failed to send {payload} to topic {topic}')
+
     def publish(self, topic, payload, retain):
         try:
             result = self._client.publish(
                 topic=topic,
                 payload=payload,
                 retain=retain)
-            return result[0]
+
+            if result[0] == 0:
+                self._log_success_sent(topic, payload)
+            else:
+                self._log_failed_sent(topic, payload)
+                time.sleep(5)
+                self.connect()
+                self.publish(topic, payload, retain)
+
         except Exception as e:
             logging.exception(e)
             time.sleep(5)
