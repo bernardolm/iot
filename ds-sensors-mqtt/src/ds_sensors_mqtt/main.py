@@ -6,7 +6,6 @@ import threading
 import time
 
 from dotenv import load_dotenv
-from src.ds_sensors_mqtt.measurer import Measurer
 from src.ds_sensors_mqtt.mqtt import Client
 from src.ds_sensors_mqtt.publisher import Publisher
 from src.ds_sensors_mqtt.updater import Updater
@@ -26,6 +25,7 @@ def main():
         from src.ds_sensors_mqtt.mocks.measurer import Measurer
         from src.ds_sensors_mqtt.mocks.sensors import Sensors
     else:
+        from src.ds_sensors_mqtt.measurer import Measurer
         from src.ds_sensors_mqtt.sensors import Sensors
 
     jobs = []
