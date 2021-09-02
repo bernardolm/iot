@@ -1,6 +1,7 @@
 import logging
 import os
 import socket
+import time
 
 from paho.mqtt.client import Client
 
@@ -32,6 +33,7 @@ class MqttClient():
             return result[0]
         except Exception as e:
             logging.exception(e)
+            time.sleep(5)
             self.connect()
             self.publish(topic, payload, retain)
 
