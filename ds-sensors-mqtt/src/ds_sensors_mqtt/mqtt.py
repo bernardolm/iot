@@ -24,11 +24,16 @@ class MqttClient():
         self.connect()
 
     def publish(self, topic, payload, retain):
-        result = self._client.publish(
-            topic=topic,
-            payload=payload,
-            retain=retain)
-        return result[0]
+        try:
+            result = self._client.publish(
+                topic=topic,
+                payload=payload,
+                retain=retain)
+            return result[0]
+        except Exception as e:
+            logging.exception(e)
+            self.connect()
+            self.publish(topic, payload, retain)
 
     def connect(self):
         self._client.connect(self._host, self._port)
