@@ -7,24 +7,24 @@ import os
 
 class HomeAssistant():
 
-    def __init__(self, meansurer=None, mqtt_client=None):
+    def __init__(self, meansurer=None, publisher=None):
         if meansurer is None:
             raise Exception('meansurer is required')
 
         self._availability_topic = f'ds18b20/bridge/state'
         self._config_topic = f'homeassistant/sensor/{meansurer.name}/temperature/config'
         self._meansurer = meansurer
-        self._mqtt_client = mqtt_client
+        self._publisher = publisher
         self._state_topic = f'ds18b20/{meansurer.name}'
 
         self._availability()
         self._config()
 
     def _publish(self, topic, payload):
-        if self._mqtt_client is None:
-            logging.warning(f'mqtt client not configured, send only to stdout')
+        if self._publisher is None:
+            logging.warning(f'publisher not configured, send only to stdout')
         else:
-            self._mqtt_client.publish(
+            self._publisher.publish(
                 topic=topic,
                 payload=payload,
                 retain=True)

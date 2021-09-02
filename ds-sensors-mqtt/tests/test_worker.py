@@ -3,7 +3,8 @@ import os
 import unittest
 
 from src.ds_sensors_mqtt.home_assistant import HomeAssistant
-from src.ds_sensors_mqtt.mock import MqttClient, Sensor, Sensors
+from src.ds_sensors_mqtt.measurer import Measurer
+from src.ds_sensors_mqtt.publishers.mqtt import MQTTPublisher
 from src.ds_sensors_mqtt.worker import Worker
 from testfixtures import LogCapture
 
@@ -15,13 +16,13 @@ class TestWorker(unittest.TestCase):
         os.environ['WORKER_INTERVAL'] = '0'
         os.environ['WORKER_RUN_ONCE'] = 'true'
 
-        mc = MqttClient()
+        p = MQTTPublisher()
 
-        s = Sensor()
+        m = Measurer()
 
-        ha = HomeAssistant(sensor_name=s.name(), mqtt_client=mc)
+        ha = HomeAssistant(meansurer=m, publisher=p)
 
-        w = Worker(sensor=s, home_assistant=ha)
+        w = Worker(home_assistant=ha)
 
         with LogCapture() as logs:
             await w.do()

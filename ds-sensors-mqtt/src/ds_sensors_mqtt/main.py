@@ -7,9 +7,9 @@ import time
 
 from dotenv import load_dotenv
 from src.ds_sensors_mqtt.home_assistant import HomeAssistant
-from src.ds_sensors_mqtt.mqtt import Client
 from src.ds_sensors_mqtt.updater import Updater
 from src.ds_sensors_mqtt.worker import Worker
+from src.ds_sensors_mqtt.publishers.mqtt import MQTTPublisher
 
 
 def main():
@@ -31,7 +31,7 @@ def main():
     jobs = []
     event = multiprocessing.Event()
 
-    mc = Client()
+    p = MQTTPublisher()
 
     for sensor in Sensors().list():
         logging.debug(sensor)
@@ -40,23 +40,23 @@ def main():
             m = Measurer(sensor)
             logging.debug(m)
 
-            ha = HomeAssistant(meansurer=m, mqtt_client=mc)
+            ha = HomeAssistant(meansurer=m, publisher=p)
             logging.debug(ha)
 
             w = Worker(home_assistant=ha)
             logging.debug(w)
 
-            p = multiprocessing.Process(target=w.do)
-            p.start()
-            jobs.append(p)
+            pc = multiprocessing.Process(target=w.do)
+            pc.start()
+            jobs.append(pc)
 
         except Exception as e:
-            logging.exception([sensor.id, e])
+            logging.exception(e)
 
     u = Updater()
-    p = multiprocessing.Process(target=u.do, args=(event,))
-    p.start()
-    jobs.append(p)
+    pc = multiprocessing.Process(target=u.do, args=(event,))
+    pc.start()
+    jobs.append(pc)
 
     while True:
         if event.is_set():
