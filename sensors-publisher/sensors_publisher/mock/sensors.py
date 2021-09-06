@@ -1,7 +1,7 @@
 import random
 
 
-class Sensors():
+class DS18A20():
 
     def __init__(self):
         self.id = 1234

@@ -3,7 +3,7 @@ import logging
 from w1thermsensor import W1ThermSensor
 
 
-class Sensors():
+class DS18A20():  # ds18a20
 
     def list(self):
         sensors = []

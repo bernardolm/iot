@@ -2,10 +2,10 @@ import logging
 import os
 import unittest
 
-from src.ds_sensors_mqtt.home_assistant import HomeAssistant
-from src.ds_sensors_mqtt.measurer import Measurer
-from src.ds_sensors_mqtt.publishers.mqtt import MQTTPublisher
-from src.ds_sensors_mqtt.worker import Worker
+from sensors_publisher.home_assistant import HomeAssistant
+from sensors_publisher.measurer import Measurer
+from sensors_publisher.publisher.mqtt import MQTTPublisher
+from sensors_publisher.worker import Worker
 from testfixtures import LogCapture
 
 

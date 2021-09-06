@@ -6,10 +6,10 @@ import threading
 import time
 
 from dotenv import load_dotenv
-from src.ds_sensors_mqtt.home_assistant import HomeAssistant
-from src.ds_sensors_mqtt.updater import Updater
-from src.ds_sensors_mqtt.worker import Worker
-from src.ds_sensors_mqtt.publishers.mqtt import MQTTPublisher
+from sensors_publisher.home_assistant import HomeAssistant
+from sensors_publisher.updater import Updater
+from sensors_publisher.worker import Worker
+from sensors_publisher.publisher.mqtt import MQTTPublisher
 
 
 def main():
@@ -22,18 +22,18 @@ def main():
     logging.info(f'running in {"debug" if debug else "normal"} mode...')
 
     if debug:
-        from src.ds_sensors_mqtt.mocks.measurer import Measurer
-        from src.ds_sensors_mqtt.mocks.sensors import Sensors
+        from sensors_publisher.mock.measurer import Measurer
+        from sensors_publisher.mock.sensors import DS18A20
     else:
-        from src.ds_sensors_mqtt.measurer import Measurer
-        from src.ds_sensors_mqtt.sensors import Sensors
+        from sensors_publisher.measurer import Measurer
+        from sensors_publisher.sensors import DS18A20
 
     jobs = []
     event = multiprocessing.Event()
 
     p = MQTTPublisher()
 
-    for sensor in Sensors().list():
+    for sensor in DS18A20().list():
         logging.debug(sensor)
 
         try:
