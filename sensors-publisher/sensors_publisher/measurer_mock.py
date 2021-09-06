@@ -1,7 +1,7 @@
 import random
 
 
-class Measurer():
+class MeasurerMock():
 
     def __init__(self, sensor=None):
         self.name = f'measurer_test_{random.randint(1000, 9999)}'

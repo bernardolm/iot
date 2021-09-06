@@ -1,7 +1,7 @@
 import random
 
 
-class DS18A20():
+class DS18A20Mock():
 
     def __init__(self):
         self.id = 1234

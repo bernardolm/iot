@@ -11,9 +11,9 @@ setup(
     version="0.0.1",
     install_requires=reqs,
     packages=[
-        "sensors_publisher.mock.publisher",
-        "sensors_publisher.mock",
+        "sensors_publisher.interface",
         "sensors_publisher.publisher",
+        "sensors_publisher.sensor",
         "sensors_publisher",
     ]
 )
