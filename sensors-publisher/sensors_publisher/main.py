@@ -6,10 +6,11 @@ import threading
 import time
 
 from dotenv import load_dotenv
-from sensors_publisher.home_assistant import HomeAssistant
+
+from sensors_publisher.interface.home_assistant import HomeAssistant
+from sensors_publisher.publisher.mqtt import MQTTPublisher
 from sensors_publisher.updater import Updater
 from sensors_publisher.worker import Worker
-from sensors_publisher.publisher.mqtt import MQTTPublisher
 
 
 def main():
@@ -22,8 +23,8 @@ def main():
     logging.info(f'running in {"debug" if debug else "normal"} mode...')
 
     if debug:
-        from sensors_publisher.mock.measurer import Measurer
-        from sensors_publisher.mock.sensors import DS18A20
+        from sensors_publisher.mock import MeasurerMock as Measurer
+        from sensors_publisher.sensor.mock import DS18A20Mock as DS18A20
     else:
         from sensors_publisher.measurer import Measurer
         from sensors_publisher.sensors import DS18A20
