@@ -1,5 +1,5 @@
 ENV?=development
-ZOMBIES=$(shell ps aux | grep src/sensors_publisher/main.py | grep -v grep | awk '{print $$2}')
+ZOMBIES=$(shell ps aux | grep sensors_publisher/main.py | grep -v grep | awk '{print $$2}')
 
 
 install:
@@ -25,7 +25,7 @@ endif
 
 start: setup kill
 	@echo 'starting app...'
-	@python3 src/sensors_publisher/main.py
+	@python3 sensors_publisher/main.py
 
 supervisor:
 	@supervisord -c supervisord.conf
