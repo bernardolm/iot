@@ -27,7 +27,7 @@ def main():
         from sensors_publisher.sensor.mock import DS18A20Mock as DS18A20
     else:
         from sensors_publisher.measurer import Measurer
-        from sensors_publisher.sensors import DS18A20
+        from sensors_publisher.sensor import DS18A20
 
     jobs = []
     event = multiprocessing.Event()
