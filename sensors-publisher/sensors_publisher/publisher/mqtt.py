@@ -52,4 +52,8 @@ class MQTTPublisher():
             self.publish(topic, payload, retain)
 
     def connect(self):
-        self._client.connect(self._host, self._port)
+        try:
+            self._client.connect(self._host, self._port)
+        except Exception as e:
+            logging.exception(
+                [f'failed to connect to MQTT, will retry later', e])
