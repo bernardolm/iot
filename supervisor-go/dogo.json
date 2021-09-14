@@ -1,0 +1,4 @@
+{
+  "BuildCmd": "sleep 2",
+  "RunCmd": "go run cmd/worker/main.go"
+}
