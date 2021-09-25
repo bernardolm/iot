@@ -10,7 +10,7 @@ import (
 	"github.com/bernardolm/iot/sensors-publisher-go/formatter/homeassistant"
 	"github.com/bernardolm/iot/sensors-publisher-go/logging"
 	"github.com/bernardolm/iot/sensors-publisher-go/publisher/messagebus"
-	"github.com/bernardolm/iot/sensors-publisher-go/sensor/ds18a20"
+	sensormock "github.com/bernardolm/iot/sensors-publisher-go/sensor/mock"
 	"github.com/bernardolm/iot/sensors-publisher-go/worker"
 	log "github.com/sirupsen/logrus"
 )
@@ -21,7 +21,7 @@ func main() {
 
 	w := worker.New()
 
-	ds := ds18a20.New()
+	ds := sensormock.New()
 	w.AddSensor(ds)
 
 	ha := homeassistant.New(ds)

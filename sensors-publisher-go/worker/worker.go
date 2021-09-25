@@ -27,21 +27,36 @@ func (w *worker) AddFormatter(f formatter.Formatter) {
 
 func (w *worker) Do() {
 	for s := range w.sensor {
-		m, err := w.sensor[s].Get()
+		v, err := w.sensor[s].Get()
 		if err != nil {
 			log.Error(err)
 			continue
 		}
 
 		for f := range w.formatter {
-			mf, err := w.formatter[f].Do(m)
+			t, m, err := w.formatter[f].Config()
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+
+			if m != "" {
+				for p := range w.publisher {
+					err := w.publisher[p].Do(t, m)
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			}
+
+			t1, m1, err := w.formatter[f].State(v)
 			if err != nil {
 				log.Error(err)
 				continue
 			}
 
 			for p := range w.publisher {
-				err := w.publisher[p].Do(mf)
+				err := w.publisher[p].Do(t1, m1)
 				if err != nil {
 					log.Error(err)
 				}

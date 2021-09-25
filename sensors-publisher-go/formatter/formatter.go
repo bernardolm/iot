@@ -1,5 +1,7 @@
 package formatter
 
 type Formatter interface {
-	Do(interface{}) (interface{}, error)
+	Availability() (string, string, error)
+	Config() (string, string, error)
+	State(interface{}) (string, interface{}, error)
 }

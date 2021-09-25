@@ -18,14 +18,29 @@ type homeassistant struct {
 	configPayload     string
 	configTopic       string
 	hasSentConfig     bool
+	statePayload      string
 	stateTopic        string
 }
 
-func (ha *homeassistant) Do(value interface{}) (interface{}, error) {
-	log.WithField("value", value).
-		Debug("formatting")
+func (ha *homeassistant) Availability() (string, string, error) {
+	log.Debug("formatting availability")
+	return "", "", nil
+}
 
-	return nil, nil
+func (ha *homeassistant) Config() (string, string, error) {
+	if ha.hasSentConfig {
+		return "", "", nil
+	}
+	ha.hasSentConfig = true
+
+	log.Debug("formatting config")
+
+	return ha.configTopic, ha.configPayload, nil
+}
+
+func (ha *homeassistant) State(v interface{}) (string, interface{}, error) {
+	log.WithField("value", v).Debug("formatting state")
+	return ha.stateTopic, fmt.Sprintf(ha.statePayload, v), nil
 }
 
 func New(s sensor.Sensor) *homeassistant {
@@ -45,6 +60,7 @@ func New(s sensor.Sensor) *homeassistant {
 		availabilityTopic: t.AvailabilityTopic,
 		configPayload:     buildConfigPayload(t),
 		configTopic:       t.ConfigTopic,
+		statePayload:      buildStatePayload(s.DeviceClass()),
 		stateTopic:        t.StateTopic,
 	}
 }

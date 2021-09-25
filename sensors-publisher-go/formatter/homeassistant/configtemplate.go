@@ -2,6 +2,7 @@ package homeassistant
 
 import (
 	"bytes"
+	"fmt"
 	"text/template"
 )
 
@@ -54,7 +55,9 @@ func buildConfigPayload(t configPayloadTemplate) string {
 		panic(err)
 	}
 
-	println(buf.String())
-
 	return buf.String()
+}
+
+func buildStatePayload(deviceClass string) string {
+	return fmt.Sprintf(`{'%s': '%%s'}`, deviceClass)
 }

@@ -1,5 +1,5 @@
 package publisher
 
 type Publisher interface {
-	Do(interface{}) error
+	Do(string, interface{}) error
 }
