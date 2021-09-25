@@ -7,5 +7,10 @@ const (
 )
 
 type Sensor interface {
+	DeviceClass() string
 	Get() (interface{}, error)
+	ID() string
+	Manufacturer() string
+	Model() string
+	UnitOfMeasurement() string
 }

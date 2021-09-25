@@ -24,7 +24,7 @@ func main() {
 	ds := ds18a20.New()
 	w.AddSensor(ds)
 
-	ha := homeassistant.New()
+	ha := homeassistant.New(ds)
 	w.AddFormatter(ha)
 
 	mb := messagebus.New()
@@ -40,7 +40,7 @@ func main() {
 	ec := make(<-chan error)
 	sc := make(chan os.Signal)
 
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM) // nolint
 
 	select {
 	case err := <-ec:
