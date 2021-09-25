@@ -5,3 +5,7 @@ type mock struct{}
 func (m *mock) Do(T string) error {
 	return nil
 }
+
+func New() *mock {
+	return &mock{}
+}

@@ -50,6 +50,6 @@ func (w *worker) Do() {
 	}
 }
 
-func NewWorker() *worker {
+func New() *worker {
 	return &worker{}
 }
