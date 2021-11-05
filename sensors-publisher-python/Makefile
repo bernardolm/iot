@@ -7,7 +7,7 @@ ifeq ("${ENV}","production")
 	@echo 'installing app...'
 	@curl -sL https://github.com/bernardolm/iot/archive/refs/heads/master.zip -o master.zip
 	@unzip -qq -o master.zip
-	@cp -r iot-master/* ../
+	@cp -r iot-master/sensors-publisher-python/* ../
 	@rm -rf iot-master master.zip
 	@echo 'finish app install'
 endif
