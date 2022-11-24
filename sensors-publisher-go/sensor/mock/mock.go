@@ -4,18 +4,27 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/aws/aws-sdk-go/aws"
 	log "github.com/sirupsen/logrus"
 )
 
 type mock struct{}
 
 func (m *mock) Get() (interface{}, error) {
-	log.Debug("getting values")
-	return fmt.Sprint(rand.Intn(100-20) + 20), nil
+	var value *int
+	value = aws.Int(rand.Intn(100-20) + 20)
+
+	if value == nil {
+		return nil, fmt.Errorf("mock.get: fail to get value")
+	}
+
+	log.WithField("sensor", "mock").WithField("value", *value).Debug("getting values")
+	return *value, nil
+
 }
 
 func (m *mock) DeviceClass() string {
-	return "temperature"
+	return "pressure"
 }
 
 func (m *mock) ID() string {

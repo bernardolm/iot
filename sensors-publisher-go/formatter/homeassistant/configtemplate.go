@@ -3,7 +3,12 @@ package homeassistant
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 	"text/template"
+)
+
+var (
+	r = regexp.MustCompile(`[\s\p{Zs}]+|[\s\p{Zs}]+`)
 )
 
 type configPayloadTemplate struct {
@@ -21,7 +26,7 @@ type configPayloadTemplate struct {
 
 func buildConfigPayload(t configPayloadTemplate) string {
 	tmp1 := template.New("configPayloadTemplate").Delims("[[", "]]")
-	tmp1, err := tmp1.Parse(`
+	payload := `
 {
 	'availability': [
 		{
@@ -45,7 +50,9 @@ func buildConfigPayload(t configPayloadTemplate) string {
 	'unique_id': [[.ID]],
 	'unit_of_measurement': '[[.UnitOfMeasurement]]',
 	'value_template': '{{ value_json.[[.DeviceClass]] }}',
-}`)
+}`
+	payload = r.ReplaceAllString(payload, "")
+	tmp1, err := tmp1.Parse(payload)
 	if err != nil {
 		panic(err)
 	}
@@ -59,5 +66,5 @@ func buildConfigPayload(t configPayloadTemplate) string {
 }
 
 func buildStatePayload(deviceClass string) string {
-	return fmt.Sprintf(`{'%s': '%%s'}`, deviceClass)
+	return fmt.Sprintf(`{'%s': '%%v'}`, deviceClass)
 }

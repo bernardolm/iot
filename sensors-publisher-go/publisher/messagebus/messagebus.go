@@ -6,8 +6,13 @@ import (
 
 type messagebus struct{}
 
-func (mb *messagebus) Do(topic string, message interface{}) error {
-	log.WithField("topic", topic).WithField("message", message).Debug("publishing")
+func (a *messagebus) Do(topic string, message interface{}) error {
+	if message == nil {
+		return nil
+	}
+
+	log.WithField("topic", topic).WithField("message", message).WithField("publisher", "messagebus").
+		Debug("publishing")
 	return nil
 }
 

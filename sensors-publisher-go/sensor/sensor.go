@@ -4,11 +4,12 @@ type Type string
 
 const (
 	DS18A20 Type = "DS18A20"
+	Mock    Type = "Mock"
 )
 
 type Sensor interface {
 	DeviceClass() string
-	Get() (interface{}, error)
+	Get() (value interface{}, err error)
 	ID() string
 	Manufacturer() string
 	Model() string

@@ -26,39 +26,41 @@ func (w *worker) AddFormatter(f formatter.Formatter) {
 }
 
 func (w *worker) Do() {
-	for s := range w.sensor {
-		v, err := w.sensor[s].Get()
+	for sensor := range w.sensor {
+		value, err := w.sensor[sensor].Get()
 		if err != nil {
 			log.Error(err)
 			continue
 		}
 
-		for f := range w.formatter {
-			t, m, err := w.formatter[f].Config()
+		for formatter := range w.formatter {
+			configTopic, configMessage, err := w.formatter[formatter].Config()
 			if err != nil {
 				log.Error(err)
 				continue
 			}
 
-			if m != "" {
-				for p := range w.publisher {
-					err := w.publisher[p].Do(t, m)
+			if configTopic != "" && configMessage != "" {
+				for publisher := range w.publisher {
+					err := w.publisher[publisher].Do(configTopic, configMessage)
 					if err != nil {
 						log.Error(err)
 					}
 				}
 			}
 
-			t1, m1, err := w.formatter[f].State(v)
+			stateTopic, stateMessage, err := w.formatter[formatter].State(value)
 			if err != nil {
 				log.Error(err)
 				continue
 			}
 
-			for p := range w.publisher {
-				err := w.publisher[p].Do(t1, m1)
-				if err != nil {
-					log.Error(err)
+			if stateTopic != "" && stateMessage != "" {
+				for publisher := range w.publisher {
+					err := w.publisher[publisher].Do(stateTopic, stateMessage)
+					if err != nil {
+						log.Error(err)
+					}
 				}
 			}
 		}

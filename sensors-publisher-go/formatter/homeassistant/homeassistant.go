@@ -29,18 +29,24 @@ func (ha *homeassistant) Availability() (string, string, error) {
 
 func (ha *homeassistant) Config() (string, string, error) {
 	if ha.hasSentConfig {
+		// just skip
 		return "", "", nil
 	}
+
 	ha.hasSentConfig = true
 
-	log.Debug("formatting config")
-
+	log.WithField("formatter", "homeassistant").WithField("topic", ha.configTopic).Debug("formatting config")
 	return ha.configTopic, ha.configPayload, nil
 }
 
-func (ha *homeassistant) State(v interface{}) (string, interface{}, error) {
-	log.WithField("value", v).Debug("formatting state")
-	return ha.stateTopic, fmt.Sprintf(ha.statePayload, v), nil
+func (ha *homeassistant) State(value interface{}) (string, interface{}, error) {
+	if value == nil {
+		return "", nil, fmt.Errorf("homeassistant.state: nil value received for topic %s", ha.stateTopic)
+	}
+
+	log.WithField("value", value).WithField("formatter", "homeassistant").WithField("topic", ha.configTopic).
+		Debug("formatting state")
+	return ha.stateTopic, fmt.Sprintf(ha.statePayload, value), nil
 }
 
 func New(s sensor.Sensor) *homeassistant {
