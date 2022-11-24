@@ -11,7 +11,7 @@ const (
 )
 
 func (a *homeassistant) buildState(s sensor.Sensor) {
-	a.stateTopic = fmt.Sprintf(stateTopicFormat, a.bridge, s.ID())
+	a.stateTopic = fmt.Sprintf(stateTopicFormat, a.bridge, s.Name())
 }
 
 func (a *homeassistant) state(s sensor.Sensor) (string, error) {
@@ -20,5 +20,5 @@ func (a *homeassistant) state(s sensor.Sensor) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("{'%s':%v}", s.DeviceClass(), v), nil
+	return fmt.Sprintf(`{"%s":%v}`, s.DeviceClass(), v), nil
 }

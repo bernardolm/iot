@@ -12,17 +12,17 @@ type ds18a20 struct {
 	id string
 }
 
-func (d *ds18a20) Get() (interface{}, error) {
+func (a *ds18a20) Get() (interface{}, error) {
 	var value *float64
 
-	if len(d.id) == 0 {
+	if len(a.id) == 0 {
 		return nil, fmt.Errorf("none ds18a20 sensor found")
 	}
 
-	t, err := ds18b20.Temperature(d.id)
+	t, err := ds18b20.Temperature(a.id)
 	if err == nil {
 		log.WithField("sensor", "ds18a20").
-			WithField("id", d.id).
+			WithField("id", a.id).
 			WithField("value", t).
 			Debug("sensor retrieved value")
 		value = &t
@@ -32,31 +32,35 @@ func (d *ds18a20) Get() (interface{}, error) {
 		return nil, fmt.Errorf("ds18a20.get: fail to get value")
 	}
 
-	log.WithField("sensor", "ds18a20").
-		WithField("value", *value).
-		Debug("getting values")
-
 	return *value, nil
 }
 
-func (d *ds18a20) DeviceClass() string {
+func (a *ds18a20) DeviceClass() string {
 	return "temperature"
 }
 
-func (d *ds18a20) ID() string {
-	return d.id
+func (a *ds18a20) ID() string {
+	return a.id
 }
 
-func (d *ds18a20) Manufacturer() string {
+func (a *ds18a20) Manufacturer() string {
 	return "Unknown"
 }
 
-func (d *ds18a20) Model() string {
+func (a *ds18a20) Model() string {
 	return "ds18a20"
 }
 
-func (d *ds18a20) UnitOfMeasurement() string {
+func (a *ds18a20) Name() string {
+	return fmt.Sprintf("%s %s sensor", a.Model(), a.DeviceClass())
+}
+
+func (a *ds18a20) UnitOfMeasurement() string {
 	return "°C"
+}
+
+func (a *ds18a20) UniqueID() string {
+	return fmt.Sprintf("%s_%s", a.ID(), a.DeviceClass())
 }
 
 func New() ([]*ds18a20, error) {

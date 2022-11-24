@@ -13,43 +13,41 @@ const (
 )
 
 var (
-	configPayload = `{
-    "availability": [
-      {
-        "topic": "[[.AvailabilityTopic]]/state",
-      },
-      {
-        "topic": "[[.StateTopic]]/availability",
-      }
-    ],
-    "availability_mode": "all",
-    "device": {
-      "identifiers": [
-        "[[.ID]]"
-      ],
-      "manufacturer": "[[.Manufacturer]]",
-      "model": "[[.Model]]",
-      "name": "[[.Name]]",
-      "sw_version": "[[.Model]] 0.0.1"
+	configPayload = `
+{
+  "availability": [
+    {
+      "topic": "[[.AvailabilityTopic]]"
     },
-    "device_class": "[[.DeviceClass]]",
-    "enabled_by_default": true,
-    "json_attributes_topic": "[[.StateTopic]]",
-    "name": "[[.Name]] ([[.ID]])",
-    "state_class": "measurement",
-    "state_topic": "[[.StateTopic]]",
-    "unique_id": "[[.UniqueID]]",
-    "unit_of_measurement": "[[.UnitOfMeasurement]]",
-    "value_template": "{{ value_json.[[.DeviceClass]] }}"
-	}`
-
-	// spaceClear = regexp.MustCompile(`[\s\p{Zs}]+|[\s\p{Zs}]+`)
+    {
+      "topic": "[[.StateTopic]]/availability"
+    }
+  ],
+  "availability_mode": "all",
+  "device": {
+    "identifiers": [
+      "[[.Identifier]]"
+    ],
+    "manufacturer": "[[.Manufacturer]]",
+    "model": "[[.Model]]",
+    "name": "[[.Name]]",
+    "sw_version": "[[.Model]] 0.0.1"
+  },
+  "device_class": "[[.DeviceClass]]",
+  "enabled_by_default": true,
+  "json_attributes_topic": "[[.StateTopic]]",
+  "name": "[[.Name]]",
+  "state_class": "measurement",
+  "state_topic": "[[.StateTopic]]",
+  "unique_id": "[[.UniqueID]]",
+  "unit_of_measurement": "[[.UnitOfMeasurement]]",
+  "value_template": "{{ value_json.[[.DeviceClass]] }}"
+}`
 )
 
 func (a *homeassistant) buildConfig(s sensor.Sensor) error {
 	a.configTopic = fmt.Sprintf(configTopicFormat, name, s.ID(), s.DeviceClass())
 
-	// payload := spaceClear.ReplaceAllString(configPayload, "")
 	payload := configPayload
 
 	configTempl := template.New("configPayloadTemplate").Delims("[[", "]]")
@@ -62,12 +60,13 @@ func (a *homeassistant) buildConfig(s sensor.Sensor) error {
 		"AvailabilityTopic": a.availabilityTopic,
 		"DeviceClass":       s.DeviceClass(),
 		"ID":                s.ID(),
+		"Identifier":        fmt.Sprintf("%s_%s", a.bridge, s.ID()),
 		"Manufacturer":      s.Manufacturer(),
 		"Model":             s.Model(),
-		"Name":              fmt.Sprintf("%s %s sensor", s.Model(), s.DeviceClass()),
+		"Name":              s.Name(),
 		"StateTopic":        a.stateTopic,
+		"UniqueID":          fmt.Sprintf("%s_%s", s.UniqueID(), a.bridge),
 		"UnitOfMeasurement": s.UnitOfMeasurement(),
-		"UniqueID":          fmt.Sprintf("%s_%s_%s", s.ID(), s.DeviceClass(), a.bridge),
 	}
 
 	buf := new(bytes.Buffer)

@@ -26,7 +26,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	bridge := "sensors-publisher-go"
+	bridge := "sensors_publisher_go"
 
 	msqt := publishermqtt.New()
 	so := publisherstdout.New()

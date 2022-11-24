@@ -41,6 +41,14 @@ func (a *mock) Model() string {
 	return "mock"
 }
 
+func (a *mock) Name() string {
+	return fmt.Sprintf("%s %s sensor", a.Model(), a.DeviceClass())
+}
+
+func (a *mock) UniqueID() string {
+	return fmt.Sprintf("%s_%s", a.ID(), a.DeviceClass())
+}
+
 func (a *mock) UnitOfMeasurement() string {
 	return "hPa"
 }

@@ -13,5 +13,7 @@ type Sensor interface {
 	ID() string
 	Manufacturer() string
 	Model() string
+	Name() string
+	UniqueID() string
 	UnitOfMeasurement() string
 }
