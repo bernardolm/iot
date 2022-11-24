@@ -1,5 +1,4 @@
 *.env
 *.txt
-Automation_Custom_Script.sh
 console*
 tmp

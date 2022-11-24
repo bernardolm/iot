@@ -3,14 +3,24 @@ ifneq (,$(wildcard ./config.env))
     export
 endif
 
+WORKING_DIR=/usr/local/sensor-publisher-go
+BIN_FILE=console_arm
+
 start:
-	go run cmd/console/main.go
+	@go run cmd/console/main.go
 
 build:
-	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o console_arm cmd/console/main.go
-	@upx --best --lzma console_arm
-	@ssh ${RPI1_USER}@${RPI1_HOST} 'env; rm -rf /tmp/console_* || true'
-	@scp console_arm ${RPI1_USER}@${RPI1_HOST}:/tmp
-	@scp Automation_Custom_Script.sh ${RPI1_USER}@${RPI1_HOST}:/boot
-	@rm console_arm*
-	@ssh root@${RPI1_HOST} '/boot/dietpi/dietpi-autostart 14'
+	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o ${BIN_FILE} cmd/console/main.go
+	@upx --best --lzma ${BIN_FILE}
+
+install: build
+	@ssh ${RPI1_USER}@${RPI1_HOST} 'rm -rf ${WORKING_DIR} || true; mkdir -p ${WORKING_DIR} || true'
+	@scp config.env \
+		sensor-publisher-go.service \
+		service_install.sh \
+		${BIN_FILE} \
+		${RPI1_USER}@${RPI1_HOST}:${WORKING_DIR}
+	@ssh ${RPI1_USER}@${RPI1_HOST} '${WORKING_DIR}/service_install.sh'
+
+debug:
+	@ssh ${RPI1_USER}@${RPI1_HOST} 'journalctl -u sensor_publisher_go_service'
