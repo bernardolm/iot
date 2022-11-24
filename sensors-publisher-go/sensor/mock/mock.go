@@ -5,44 +5,48 @@ import (
 	"math/rand"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
-type mock struct{}
+type mock struct {
+	id string
+}
 
-func (m *mock) Get() (interface{}, error) {
-	var value *int
-	value = aws.Int(rand.Intn(100-20) + 20)
+func (a *mock) Get() (interface{}, error) {
+	value := aws.Float32(rand.Float32() * 85.96)
 
 	if value == nil {
 		return nil, fmt.Errorf("mock.get: fail to get value")
 	}
 
 	log.WithField("sensor", "mock").WithField("value", *value).Debug("getting values")
-	return *value, nil
 
+	return *value, nil
 }
 
-func (m *mock) DeviceClass() string {
+func (a *mock) DeviceClass() string {
 	return "pressure"
 }
 
-func (m *mock) ID() string {
-	return "some_random_device_id"
+func (a *mock) ID() string {
+	return a.id
 }
 
-func (m *mock) Manufacturer() string {
+func (a *mock) Manufacturer() string {
 	return "Unknown"
 }
 
-func (m *mock) Model() string {
+func (a *mock) Model() string {
 	return "mock"
 }
 
-func (m *mock) UnitOfMeasurement() string {
-	return "°F"
+func (a *mock) UnitOfMeasurement() string {
+	return "hPa"
 }
 
 func New() *mock {
-	return &mock{}
+	return &mock{
+		id: "mock_" + uuid.New().String(),
+	}
 }

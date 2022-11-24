@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/aws/aws-sdk-go v1.44.145
 	github.com/eclipse/paho.mqtt.golang v1.4.2
+	github.com/google/uuid v1.1.2
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.14.0
 	github.com/yryz/ds18b20 v0.0.0-20200527154408-4a8f84bb82d4

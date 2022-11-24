@@ -1,5 +1,5 @@
 package publisher
 
 type Publisher interface {
-	Do(topic string, message interface{}) error
+	Publish(topic string, message interface{}) error
 }

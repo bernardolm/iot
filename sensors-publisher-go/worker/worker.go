@@ -1,72 +1,48 @@
 package worker
 
 import (
+	"time"
+
 	"github.com/bernardolm/iot/sensors-publisher-go/formatter"
 	"github.com/bernardolm/iot/sensors-publisher-go/publisher"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 type worker struct {
-	formatter []formatter.Formatter
-	publisher []publisher.Publisher
-	sensor    []sensor.Sensor
+	delta time.Duration
+	flows []flow
 }
 
-func (w *worker) AddSensor(s sensor.Sensor) {
-	w.sensor = append(w.sensor, s)
+func (w *worker) AddFlow(s sensor.Sensor, f formatter.Formatter, p []publisher.Publisher) {
+	w.flows = append(w.flows, flow{
+		sensor:     s,
+		formatter:  f,
+		publishers: p,
+	})
 }
 
-func (w *worker) AddPublisher(p publisher.Publisher) {
-	w.publisher = append(w.publisher, p)
-}
-
-func (w *worker) AddFormatter(f formatter.Formatter) {
-	w.formatter = append(w.formatter, f)
-}
-
-func (w *worker) Do() {
-	for sensor := range w.sensor {
-		value, err := w.sensor[sensor].Get()
-		if err != nil {
-			log.Error(err)
-			continue
+func (w *worker) Start() {
+	go func() {
+		for {
+			for _, flow := range w.flows {
+				flow.Start()
+			}
+			log.Debug("worker waiting...")
+			time.Sleep(w.delta)
 		}
-
-		for formatter := range w.formatter {
-			configTopic, configMessage, err := w.formatter[formatter].Config()
-			if err != nil {
-				log.Error(err)
-				continue
-			}
-
-			if configTopic != "" && configMessage != "" {
-				for publisher := range w.publisher {
-					err := w.publisher[publisher].Do(configTopic, configMessage)
-					if err != nil {
-						log.Error(err)
-					}
-				}
-			}
-
-			stateTopic, stateMessage, err := w.formatter[formatter].State(value)
-			if err != nil {
-				log.Error(err)
-				continue
-			}
-
-			if stateTopic != "" && stateMessage != "" {
-				for publisher := range w.publisher {
-					err := w.publisher[publisher].Do(stateTopic, stateMessage)
-					if err != nil {
-						log.Error(err)
-					}
-				}
-			}
-		}
-	}
+	}()
 }
 
 func New() *worker {
-	return &worker{}
+	w := worker{
+		delta: viper.GetDuration("WORKER_DELTA"),
+	}
+
+	if w.delta == 0 {
+		w.delta = 5 * time.Second
+	}
+
+	return &w
 }

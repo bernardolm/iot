@@ -1,7 +1,10 @@
 package formatter
 
+import (
+	"github.com/bernardolm/iot/sensors-publisher-go/message"
+	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
+)
+
 type Formatter interface {
-	Availability() (topic string, payload string, err error)
-	Config() (topic string, payload string, err error)
-	State(interface{}) (topic string, payload interface{}, err error)
+	Build(s sensor.Sensor) []message.Message
 }

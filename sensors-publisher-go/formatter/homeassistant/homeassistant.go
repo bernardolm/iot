@@ -1,72 +1,75 @@
 package homeassistant
 
 import (
-	"fmt"
-
+	"github.com/bernardolm/iot/sensors-publisher-go/message"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
 	log "github.com/sirupsen/logrus"
 )
 
 const (
-	availabilityTopic string = "%s/bridge/state"
-	configTopic       string = "homeassistant/sensor/%s/%s/config"
-	stateTopic        string = "%s/%s"
+	name = "homeassistant"
 )
 
 type homeassistant struct {
-	availabilityTopic string
-	configPayload     string
-	configTopic       string
-	hasSentConfig     bool
-	statePayload      string
-	stateTopic        string
+	availabilityPayload string
+	availabilityTopic   string
+	bridge              string
+	configPayload       string
+	configTopic         string
+	hasSentAvailability bool
+	hasSentConfig       bool
+	stateTopic          string
 }
 
-func (ha *homeassistant) Availability() (string, string, error) {
-	log.Debug("formatting availability")
-	return "", "", nil
+func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
+	messages := []message.Message{}
+
+	if !a.hasSentConfig {
+		messages = append(messages, message.Message{
+			Topic: a.configTopic,
+			Body:  a.configPayload,
+		})
+		a.hasSentConfig = true
+	}
+
+	if !a.hasSentAvailability {
+		messages = append(messages, message.Message{
+			Topic: a.availabilityTopic,
+			Body:  a.availabilityPayload,
+		})
+		a.hasSentAvailability = true
+	}
+
+	state, err := a.state(s)
+	if err != nil {
+		log.Error(err)
+		return nil
+	}
+
+	messages = append(messages, message.Message{
+		Topic: a.stateTopic,
+		Body:  state,
+	})
+
+	messages = append(messages, message.Message{
+		Topic: a.stateTopic + "/availability",
+		Body:  "online",
+	})
+
+	return messages
 }
 
-func (ha *homeassistant) Config() (string, string, error) {
-	if ha.hasSentConfig {
-		// just skip
-		return "", "", nil
+func New(bridge string, s sensor.Sensor) (*homeassistant, error) {
+	ha := homeassistant{
+		bridge: bridge,
 	}
 
-	ha.hasSentConfig = true
+	ha.buildAvailability()
+	ha.buildState(s)
 
-	log.WithField("formatter", "homeassistant").WithField("topic", ha.configTopic).Debug("formatting config")
-	return ha.configTopic, ha.configPayload, nil
-}
-
-func (ha *homeassistant) State(value interface{}) (string, interface{}, error) {
-	if value == nil {
-		return "", nil, fmt.Errorf("homeassistant.state: nil value received for topic %s", ha.stateTopic)
+	if err := ha.buildConfig(s); err != nil {
+		return nil, err
 	}
 
-	log.WithField("value", value).WithField("formatter", "homeassistant").WithField("topic", ha.configTopic).
-		Debug("formatting state")
-	return ha.stateTopic, fmt.Sprintf(ha.statePayload, value), nil
-}
-
-func New(s sensor.Sensor) *homeassistant {
-	t := configPayloadTemplate{
-		AvailabilityTopic: fmt.Sprintf(availabilityTopic, s.Model()),
-		ConfigTopic:       fmt.Sprintf(configTopic, s.ID(), s.Model()),
-		DeviceClass:       s.DeviceClass(),
-		ID:                s.ID(),
-		Manufacturer:      s.Manufacturer(),
-		Model:             s.Model(),
-		Name:              fmt.Sprintf("%s %s sensor", s.Model(), s.DeviceClass()),
-		StateTopic:        fmt.Sprintf(stateTopic, s.Model(), s.ID()),
-		Unique:            fmt.Sprintf("%s_%s_sensor_%s", s.Model(), s.DeviceClass(), s.ID()),
-		UnitOfMeasurement: s.UnitOfMeasurement(),
-	}
-	return &homeassistant{
-		availabilityTopic: t.AvailabilityTopic,
-		configPayload:     buildConfigPayload(t),
-		configTopic:       t.ConfigTopic,
-		statePayload:      buildStatePayload(s.DeviceClass()),
-		stateTopic:        t.StateTopic,
-	}
+	return &ha, nil
 }

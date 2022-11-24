@@ -1,12 +1,16 @@
-RPI1_HOST=bernardo@192.168.1.11
+ifneq (,$(wildcard ./config.env))
+    include config.env
+    export
+endif
 
 start:
 	go run cmd/console/main.go
 
 build:
-	# GOOS=linux GOARCH=amd64 go build -gccgoflags "-s -w" -ldflags "-s -w" -o console_amd64 cmd/console/main.go
-	# -gccgoflags "-s -w"
-	GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o console_arm64 cmd/console/main.go
-	upx --best --lzma console_arm64
-	scp console_arm64 ${RPI1_HOST}:/tmp
-	ssh ${RPI1_HOST} 'env; /tmp/console_arm64'
+	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o console_arm cmd/console/main.go
+	@upx --best --lzma console_arm
+	@ssh ${RPI1_USER}@${RPI1_HOST} 'env; rm -rf /tmp/console_* || true'
+	@scp console_arm ${RPI1_USER}@${RPI1_HOST}:/tmp
+	@scp Automation_Custom_Script.sh ${RPI1_USER}@${RPI1_HOST}:/boot
+	@rm console_arm*
+	@ssh root@${RPI1_HOST} '/boot/dietpi/dietpi-autostart 14'
