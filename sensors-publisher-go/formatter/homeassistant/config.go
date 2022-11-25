@@ -31,7 +31,7 @@ var (
     "manufacturer": "[[.Manufacturer]]",
     "model": "[[.Model]]",
     "name": "[[.Name]]",
-    "sw_version": "[[.Model]] 0.0.1"
+    "sw_version": "0.0.2"
   },
   "device_class": "[[.DeviceClass]]",
   "enabled_by_default": true,

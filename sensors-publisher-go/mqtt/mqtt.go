@@ -5,17 +5,13 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 var (
 	client mqtt.Client
 )
-
-var debugger mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-	fmt.Printf("TOPIC: %s\n", msg.Topic())
-	fmt.Printf("MSG: %s\n", msg.Payload())
-}
 
 func Connect() error {
 	host := viper.GetString("MQTT_HOST")
@@ -32,14 +28,14 @@ func Connect() error {
 	clientID := "sensors-publisher-go"
 
 	opts := mqtt.NewClientOptions().AddBroker(broker).
+		SetAutoReconnect(true).
+		SetCleanSession(false).
 		SetClientID(clientID).
-		SetUsername(viper.GetString("MQTT_USER")).
-		SetPassword(viper.GetString("MQTT_PASSWORD"))
-
-	opts.SetDefaultPublishHandler(debugger)
-
-	// opts.SetKeepAlive(60 * time.Second)
-	// opts.SetPingTimeout(1 * time.Second)
+		SetKeepAlive(30 * time.Second).
+		SetOrderMatters(true).
+		SetPassword(viper.GetString("MQTT_PASSWORD")).
+		SetPingTimeout(1 * time.Second).
+		SetUsername(viper.GetString("MQTT_USER"))
 
 	client = mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -50,8 +46,13 @@ func Connect() error {
 }
 
 func Publish(topic string, payload interface{}) {
-	token := client.Publish(topic, 0, false, payload)
-	token.Wait()
+	token := client.Publish(topic, 0, true, payload)
+	go func() {
+		_ = token.Wait()
+		if err := token.Error(); err != nil {
+			log.WithError(err).Error("fail to mqtt publish")
+		}
+	}()
 }
 
 func Disconnect() {
