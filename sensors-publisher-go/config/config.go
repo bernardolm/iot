@@ -9,9 +9,10 @@ import (
 
 // Load env vars and config file to get app config
 func Load() {
-	viper.AutomaticEnv()
-
-	viper.SetConfigFile("config.env")
+	viper.AddConfigPath("./")
+	viper.AddConfigPath("/usr/share/sensors-publisher-go/")
+	viper.SetConfigName("config")
+	viper.SetConfigType("env")
 
 	if err := viper.ReadInConfig(); err != nil {
 		switch err.(type) {

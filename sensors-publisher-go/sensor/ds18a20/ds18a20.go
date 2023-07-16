@@ -75,7 +75,7 @@ func New() ([]*ds18a20, error) {
 	}
 
 	log.WithField("sensors", strings.Join(sensorIDs, ",")).
-		Debugf("%d sensors ds18a20 found", len(sensorIDs))
+		Debugf("%d sensor(s) ds18a20 found", len(sensorIDs))
 
 	sensors := []*ds18a20{}
 

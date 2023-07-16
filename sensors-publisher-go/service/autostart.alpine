@@ -1,0 +1,6 @@
+#!/sbin/openrc-run
+
+command_background=true
+command_user="root:root"
+command="/usr/share/sensors-publisher-go/sensors-publisher-go"
+pidfile="/run/${RC_SVCNAME}.pid"

@@ -1,0 +1,10 @@
+[Service]
+ExecStart=/usr/share/sensors-publisher-go/sensors-publisher-go
+WorkingDirectory=/usr/share/sensors-publisher-go
+Restart=always
+StandardOutput=journal+console
+StandardError=journal+console
+SyslogIdentifier=sensors_publisher_go_service
+
+[Install]
+WantedBy=multi-user.target

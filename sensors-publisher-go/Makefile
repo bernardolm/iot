@@ -3,24 +3,27 @@ ifneq (,$(wildcard ./config.env))
     export
 endif
 
-WORKING_DIR=/usr/local/sensor-publisher-go
-BIN_FILE=console_arm
+SUDO=
+
+ifneq (${RPI_USER},"root")
+	SUDO="sudo "
+endif
 
 start:
 	@go run cmd/console/main.go
 
 build:
-	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o ${BIN_FILE} cmd/console/main.go
-	@upx --best --lzma ${BIN_FILE}
+	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o bin/sensors-publisher-go cmd/console/main.go
+	@upx --best --lzma bin/sensors-publisher-go
 
 install: build
-	@ssh ${RPI1_USER}@${RPI1_HOST} 'rm -rf ${WORKING_DIR} || true; mkdir -p ${WORKING_DIR} || true'
+	@ssh ${RPI_USER}@${RPI_HOST} "mkdir -p /tmp/sensors-publisher-go"
+	@ssh -t ${RPI_USER}@${RPI_HOST} "eval ${SUDO} killall -9 sensors-publisher-go || true"
 	@scp config.env \
-		sensor-publisher-go.service \
-		service_install.sh \
-		${BIN_FILE} \
-		${RPI1_USER}@${RPI1_HOST}:${WORKING_DIR}
-	@ssh ${RPI1_USER}@${RPI1_HOST} '${WORKING_DIR}/service_install.sh'
+		service/* \
+		bin/sensors-publisher-go \
+		${RPI_USER}@${RPI_HOST}:/tmp/sensors-publisher-go
+	@ssh -t ${RPI_USER}@${RPI_HOST} "/tmp/sensors-publisher-go/install.sh"
 
 debug:
-	@ssh ${RPI1_USER}@${RPI1_HOST} 'journalctl -u sensor_publisher_go_service'
+	@ssh ${RPI_USER}@${RPI_HOST} "$(SUDO) journalctl -u sensors_publisher_go_service"
