@@ -11,7 +11,9 @@ func (a *lcd) Publish(topic string, message interface{}) error {
 		return nil
 	}
 
-	log.WithField("topic", topic).WithField("message", message).WithField("publisher", "lcd").
+	log.WithField("topic", topic).
+		WithField("message", string(message.([]byte))).
+		WithField("publisher", "lcd").
 		Debug("publishing")
 
 	return nil

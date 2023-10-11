@@ -1,5 +1,6 @@
 package message
 
 type Message struct {
-	Topic, Body string
+	Topic string
+	Body  []byte
 }

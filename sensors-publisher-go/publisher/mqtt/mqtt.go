@@ -1,8 +1,9 @@
 package mqtt
 
 import (
-	mqttclient "github.com/bernardolm/iot/sensors-publisher-go/mqtt"
 	log "github.com/sirupsen/logrus"
+
+	mqttclient "github.com/bernardolm/iot/sensors-publisher-go/mqtt"
 )
 
 type mqtt struct{}
@@ -12,7 +13,9 @@ func (a *mqtt) Publish(topic string, message interface{}) error {
 		return nil
 	}
 
-	log.WithField("topic", topic).WithField("message", message).WithField("publisher", "mqtt").
+	log.WithField("topic", topic).
+		WithField("message", string(message.([]byte))).
+		WithField("publisher", "mqtt").
 		Debug("publishing")
 
 	mqttclient.Publish(topic, message)

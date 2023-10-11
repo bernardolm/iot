@@ -11,7 +11,9 @@ func (a *stdout) Publish(topic string, message interface{}) error {
 		return nil
 	}
 
-	log.WithField("topic", topic).WithField("message", message).WithField("publisher", "stdout").
+	log.WithField("topic", topic).
+		WithField("message", string(message.([]byte))).
+		WithField("publisher", "stdout").
 		Debug("publishing")
 
 	return nil

@@ -27,7 +27,7 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 	if !a.hasSentConfig {
 		messages = append(messages, message.Message{
 			Topic: a.configTopic,
-			Body:  a.configPayload,
+			Body:  []byte(a.configPayload),
 		})
 		a.hasSentConfig = true
 	}
@@ -35,7 +35,7 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 	if !a.hasSentAvailability {
 		messages = append(messages, message.Message{
 			Topic: a.availabilityTopic,
-			Body:  a.availabilityPayload,
+			Body:  []byte(a.availabilityPayload),
 		})
 		a.hasSentAvailability = true
 	}
@@ -48,12 +48,12 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 
 	messages = append(messages, message.Message{
 		Topic: a.stateTopic,
-		Body:  state,
+		Body:  []byte(state),
 	})
 
 	messages = append(messages, message.Message{
 		Topic: a.stateTopic + "/availability",
-		Body:  "online",
+		Body:  []byte("online"),
 	})
 
 	return messages
