@@ -15,8 +15,8 @@ DISTRO=$(cat /etc/*-release | grep '^ID' | cut -d= -f2)
 echo "distro is $DISTRO"
 
 case "$DISTRO" in
-    "debian" | "ubuntu")    . "${CURRENT_DIR}/install.sh.debian" ;;
-    "alpine" )              . "${CURRENT_DIR}/install.sh.alpine" ;;
+    "debian" | "ubuntu")    . "${CURRENT_DIR}/debian/install.sh" ;;
+    "alpine" )              . "${CURRENT_DIR}/alpine/install.sh" ;;
     *)                      echo "distro '$DISTRO' not found" ;;
 esac
 

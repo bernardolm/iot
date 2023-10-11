@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+
+command_background=true
+command_user="root:root"
+command="/usr/share/sensors-publisher-go/sensors-publisher-go"
+pidfile="/run/${RC_SVCNAME}.pid"
+
+# output_log="/var/log/${RC_SVCNAME}/stdout.log"
+# error_log="/var/log/${RC_SVCNAME}/stderr.log"
+
+# supervise_daemon_args="--stdout /var/log/yourlogfile"
+
+output_logger_arg="--stdout-logger /usr/bin/logger"
+
+# start_pre() {
+#     checkpath --directory /etc/${RC_SVCNAME}
+# }
