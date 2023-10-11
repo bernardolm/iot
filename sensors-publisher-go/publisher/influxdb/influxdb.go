@@ -13,10 +13,9 @@ func (a *influxdb) Publish(topic string, message interface{}) error {
 		return nil
 	}
 
-	log.WithField("topic", topic).
-		WithField("message", string(message.([]byte))).
+	log.WithField("message", string(message.([]byte))).
 		WithField("publisher", "influxdb").
-		Debug("publishing")
+		Debug("publisher: trying to publish")
 
 	influxdbclient.Publish(topic, message)
 

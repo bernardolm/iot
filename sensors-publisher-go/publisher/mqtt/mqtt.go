@@ -16,7 +16,7 @@ func (a *mqtt) Publish(topic string, message interface{}) error {
 	log.WithField("topic", topic).
 		WithField("message", string(message.([]byte))).
 		WithField("publisher", "mqtt").
-		Debug("publishing")
+		Debug("publisher: trying to publish")
 
 	mqttclient.Publish(topic, message)
 

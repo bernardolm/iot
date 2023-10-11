@@ -4,11 +4,12 @@ import (
 	"context"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+
 	"github.com/bernardolm/iot/sensors-publisher-go/formatter"
 	"github.com/bernardolm/iot/sensors-publisher-go/publisher"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 type worker struct {
@@ -26,12 +27,13 @@ func (w *worker) AddFlow(s sensor.Sensor, f formatter.Formatter, p []publisher.P
 }
 
 func (w *worker) Start(_ context.Context) {
+	log.Debug("worker: starting")
 	go func() {
 		for {
 			for _, flow := range w.flows {
 				flow.Start()
 			}
-			log.Debug("worker waiting...")
+			log.Debug("worker: waiting")
 			time.Sleep(w.delta)
 		}
 	}()
