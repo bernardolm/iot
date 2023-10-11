@@ -20,6 +20,7 @@ install: build
 	@rm -rf dist/*
 	@cp -f bin/* service/${PLATFORM}/* config.env dist/
 	@ls -ah dist
+	@ssh -t ${RPI_USER}@${RPI_HOST} "mkdir -p /tmp/sensors-publisher-go"
 	@scp dist/* ${RPI_USER}@${RPI_HOST}:/tmp/sensors-publisher-go
 	@ssh -t ${RPI_USER}@${RPI_HOST} "/tmp/sensors-publisher-go/install.sh"
 
