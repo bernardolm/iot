@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	name = "homeassistant"
+	bridge = "sensors_publisher_go"
+	name   = "homeassistant"
 )
 
 type homeassistant struct {
@@ -59,7 +60,7 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 	return messages
 }
 
-func New(bridge string, s sensor.Sensor) (*homeassistant, error) {
+func New(s sensor.Sensor) (*homeassistant, error) {
 	ha := homeassistant{
 		bridge: bridge,
 	}

@@ -27,7 +27,7 @@ func (a *influxdb) Build(s sensor.Sensor) []message.Message {
 	return messages
 }
 
-func New(_ string, s sensor.Sensor) (*influxdb, error) {
+func New(s sensor.Sensor) (*influxdb, error) {
 	f := influxdb{}
 	return &f, nil
 }
