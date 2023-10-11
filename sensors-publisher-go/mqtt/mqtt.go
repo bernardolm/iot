@@ -1,6 +1,7 @@
 package mqtt
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -13,7 +14,7 @@ var (
 	client mqtt.Client
 )
 
-func Connect() error {
+func Connect(_ context.Context) error {
 	host := viper.GetString("MQTT_HOST")
 	if host == "" {
 		host = "localhost"
@@ -55,7 +56,8 @@ func Publish(topic string, payload interface{}) {
 	}()
 }
 
-func Disconnect() {
+func Disconnect(_ context.Context) {
+	log.Warn("mqtt: stopping")
+	// client.Connect().Done()
 	client.Disconnect(250)
-	time.Sleep(1 * time.Second)
 }

@@ -6,6 +6,7 @@ fi
 
 ${SUDO} rc-service sensors-publisher-go stop || true
 
+${SUDO} rm -rf /usr/share/sensors-publisher-go /var/log/sensors-publisher-go
 ${SUDO} mkdir -p /usr/share/sensors-publisher-go /var/log/sensors-publisher-go
 
 ${SUDO} mv /tmp/sensors-publisher-go/config.env /usr/share/sensors-publisher-go/config.env

@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"context"
 	"time"
 
 	"github.com/bernardolm/iot/sensors-publisher-go/formatter"
@@ -13,6 +14,7 @@ import (
 type worker struct {
 	delta time.Duration
 	flows []flow
+	// sc chan os.Signal
 }
 
 func (w *worker) AddFlow(s sensor.Sensor, f formatter.Formatter, p []publisher.Publisher) {
@@ -23,7 +25,7 @@ func (w *worker) AddFlow(s sensor.Sensor, f formatter.Formatter, p []publisher.P
 	})
 }
 
-func (w *worker) Start() {
+func (w *worker) Start(_ context.Context) {
 	go func() {
 		for {
 			for _, flow := range w.flows {
@@ -33,6 +35,11 @@ func (w *worker) Start() {
 			time.Sleep(w.delta)
 		}
 	}()
+}
+
+func (w *worker) Stop(_ context.Context) error {
+	log.Warn("worker: stopping")
+	return nil
 }
 
 func New() *worker {

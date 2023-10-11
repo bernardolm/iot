@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"time"
 
 	influxdb "github.com/influxdata/influxdb-client-go/v2"
 	influxdbapi "github.com/influxdata/influxdb-client-go/v2/api"
@@ -17,7 +16,7 @@ var (
 	client influxdb.Client
 )
 
-func Connect() error {
+func Connect(_ context.Context) error {
 	log.Info("influxdb: trying to connect")
 
 	host := viper.GetString("INFLUXDB_HOST")
@@ -73,7 +72,7 @@ func Publish(topic string, payload interface{}) {
 	api.Flush()
 }
 
-func Disconnect() {
+func Disconnect(_ context.Context) {
+	log.Warn("influxdb: stopping")
 	client.Close()
-	time.Sleep(1 * time.Second)
 }

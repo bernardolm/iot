@@ -24,10 +24,10 @@ install: build
 	@ssh -t ${RPI_USER}@${RPI_HOST} "/tmp/sensors-publisher-go/install.sh"
 
 install-debian:
-	PLATFORM=debian make install
+	@PLATFORM=debian make install
 
 install-alpine:
-	PLATFORM=alpine make install
+	@PLATFORM=alpine make install
 
 debug:
-	@ssh ${RPI_USER}@${RPI_HOST} "$(SUDO) journalctl -u sensors_publisher_go_service"
+	@ssh ${RPI_USER}@${RPI_HOST} tail -f /var/log/sensors-publisher-go/stderr.log
