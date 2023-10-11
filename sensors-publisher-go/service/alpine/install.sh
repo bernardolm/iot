@@ -1,18 +1,20 @@
 #!/bin/sh
 
-eval "$SUDO service sensors-publisher-go stop" || true
+if [ "${USER}" != "root" ]; then
+    export SUDO="sudo "
+fi
 
-eval "$SUDO" mkdir -p /usr/share/sensors-publisher-go /var/log/sensors-publisher-go
-eval "$SUDO" mv "${CURRENT_DIR}/config.env" /usr/share/sensors-publisher-go/config.env
-eval "$SUDO" mv "${CURRENT_DIR}/sensors-publisher-go" /usr/share/sensors-publisher-go/sensors-publisher-go
+${SUDO} rc-service sensors-publisher-go stop || true
 
-eval "$SUDO" mv "${CURRENT_DIR}/autostart.alpine" /etc/init.d/sensors-publisher-go
+${SUDO} mkdir -p /usr/share/sensors-publisher-go /var/log/sensors-publisher-go
 
-eval "$SUDO" chown root:root /etc/init.d/sensors-publisher-go
-eval "$SUDO" chown root:root /usr/share/sensors-publisher-go/config.env
+${SUDO} mv /tmp/sensors-publisher-go/config.env /usr/share/sensors-publisher-go/config.env
+${SUDO} mv /tmp/sensors-publisher-go/sensors-publisher-go /usr/share/sensors-publisher-go/sensors-publisher-go
+${SUDO} mv /tmp/sensors-publisher-go/autostart /etc/init.d/sensors-publisher-go
 
-# eval "$SUDO" mkdir -p /var/log/sensors-publisher-go
+${SUDO} chown root:root /etc/init.d/sensors-publisher-go
+${SUDO} chown root:root /usr/share/sensors-publisher-go/config.env
 
-eval "$SUDO" rc-update add sensors-publisher-go default
-eval "$SUDO" service sensors-publisher-go start
-eval "$SUDO" service sensors-publisher-go status
+${SUDO} rc-update add sensors-publisher-go default
+${SUDO} rc-service sensors-publisher-go start
+${SUDO} rc-service sensors-publisher-go status

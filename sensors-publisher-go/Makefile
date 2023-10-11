@@ -17,13 +17,17 @@ build:
 	@upx --best --lzma bin/sensors-publisher-go
 
 install: build
-	@ssh ${RPI_USER}@${RPI_HOST} "mkdir -p /tmp/sensors-publisher-go"
-	@ssh -t ${RPI_USER}@${RPI_HOST} "eval ${SUDO} killall -9 sensors-publisher-go || true"
-	@scp config.env \
-		service/* \
-		bin/sensors-publisher-go \
-		${RPI_USER}@${RPI_HOST}:/tmp/sensors-publisher-go
+	@rm -rf dist/*
+	@cp -f bin/* service/${PLATFORM}/* config.env dist/
+	@ls -ah dist
+	@scp dist/* ${RPI_USER}@${RPI_HOST}:/tmp/sensors-publisher-go
 	@ssh -t ${RPI_USER}@${RPI_HOST} "/tmp/sensors-publisher-go/install.sh"
+
+install-debian:
+	PLATFORM=debian make install
+
+install-alpine:
+	PLATFORM=alpine make install
 
 debug:
 	@ssh ${RPI_USER}@${RPI_HOST} "$(SUDO) journalctl -u sensors_publisher_go_service"
