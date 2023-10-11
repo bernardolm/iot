@@ -3,7 +3,7 @@ package influxdb
 import (
 	log "github.com/sirupsen/logrus"
 
-	influxdbclient "github.com/bernardolm/iot/sensors-publisher-go/influxdb"
+	influxdbclient "github.com/bernardolm/iot/sensors-publisher-go/infrastructure/influxdb"
 )
 
 type influxdb struct{}

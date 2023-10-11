@@ -17,10 +17,10 @@ func (a *mock) Get() (interface{}, error) {
 	value := aws.Float32(rand.Float32() * 85.96)
 
 	if value == nil {
-		return nil, fmt.Errorf("mock.get: fail to get value")
+		return nil, fmt.Errorf("sensor: get failed")
 	}
 
-	log.WithField("sensor", "mock").WithField("value", *value).Debug("getting values")
+	log.WithField("name", "mock").WithField("value", *value).Debug("sensor: getting values")
 
 	return *value, nil
 }

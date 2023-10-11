@@ -12,8 +12,7 @@ const (
 	configTopicFormat = "%s/sensor/%s/%s/config"
 )
 
-var (
-	configPayload = `
+var configPayload = `
 {
   "availability": [
     {
@@ -43,7 +42,6 @@ var (
   "unit_of_measurement": "[[.UnitOfMeasurement]]",
   "value_template": "{{ value_json.[[.DeviceClass]] }}"
 }`
-)
 
 func (a *homeassistant) buildConfig(s sensor.Sensor) error {
 	a.configTopic = fmt.Sprintf(configTopicFormat, name, s.ID(), s.DeviceClass())

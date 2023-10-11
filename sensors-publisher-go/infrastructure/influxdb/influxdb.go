@@ -17,7 +17,7 @@ var (
 )
 
 func Connect(_ context.Context) error {
-	log.Info("influxdb: trying to connect")
+	log.Debug("influxdb: trying to connect")
 
 	host := viper.GetString("INFLUXDB_HOST")
 	if host == "" {
@@ -43,11 +43,14 @@ func Connect(_ context.Context) error {
 	if err != nil {
 		return err
 	}
-	log.Infof("influxdb: status %s - %s", hc.Status, *hc.Message)
-
 	if client == nil {
 		return fmt.Errorf("influxdb: couldn't create a client")
 	}
+
+	log.
+		WithField("status", hc.Status).
+		WithField("message", *hc.Message).
+		Info("influxdb: connected")
 
 	database := viper.GetString("INFLUXDB_DATABASE")
 	if database == "" {
@@ -67,12 +70,15 @@ func Connect(_ context.Context) error {
 }
 
 func Publish(topic string, payload interface{}) {
+	log.Debug("influxdb: publishing")
 	line := payload.([]byte)
 	api.WriteRecord(string(line))
 	api.Flush()
+	log.Debug("influxdb: published")
 }
 
 func Disconnect(_ context.Context) {
-	log.Warn("influxdb: stopping")
+	log.Debug("influxdb: disconnecting")
 	client.Close()
+	log.Info("influxdb: disconnected")
 }

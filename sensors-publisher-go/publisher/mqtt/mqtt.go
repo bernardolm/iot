@@ -3,7 +3,7 @@ package mqtt
 import (
 	log "github.com/sirupsen/logrus"
 
-	mqttclient "github.com/bernardolm/iot/sensors-publisher-go/mqtt"
+	mqttclient "github.com/bernardolm/iot/sensors-publisher-go/infrastructure/mqtt"
 )
 
 type mqtt struct{}

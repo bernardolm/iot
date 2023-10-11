@@ -16,20 +16,20 @@ func (a *ds18a20) Get() (interface{}, error) {
 	var value *float64
 
 	if len(a.id) == 0 {
-		return nil, fmt.Errorf("none ds18a20 sensor found")
+		return nil, fmt.Errorf("sensor: none ds18a20 found")
 	}
 
 	t, err := ds18b20.Temperature(a.id)
 	if err == nil {
-		log.WithField("sensor", "ds18a20").
+		log.WithField("name", "ds18a20").
 			WithField("id", a.id).
 			WithField("value", t).
-			Debug("sensor retrieved value")
+			Debug("sensor: retrieved value")
 		value = &t
 	}
 
 	if value == nil {
-		return nil, fmt.Errorf("ds18a20.get: fail to get value")
+		return nil, fmt.Errorf("sensor: get failed")
 	}
 
 	return *value, nil
@@ -70,12 +70,12 @@ func New() ([]*ds18a20, error) {
 	}
 
 	if len(sensorIDs) == 0 {
-		log.Debug("sensors ds18a20 not found")
+		log.Debug("sensor: ds18a20 not found")
 		return nil, nil
 	}
 
 	log.WithField("sensors", strings.Join(sensorIDs, ",")).
-		Debugf("%d sensor(s) ds18a20 found", len(sensorIDs))
+		Debugf("sensor: %d ds18a20(s) found", len(sensorIDs))
 
 	sensors := []*ds18a20{}
 
