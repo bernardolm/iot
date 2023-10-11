@@ -1,6 +1,9 @@
 *.env
 *.txt
+bin
 console*
+dist
 tmp
 
-dist/
+!bin/.keep
+!dist/.keep
