@@ -24,5 +24,7 @@ func Load() {
 		}
 	}
 
-	viper.Debug()
+	if viper.GetBool("DEBUG") {
+		viper.Debug()
+	}
 }
