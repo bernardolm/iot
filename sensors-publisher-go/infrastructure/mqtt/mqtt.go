@@ -40,7 +40,7 @@ func Connect(_ context.Context) error {
 		SetOnConnectHandler(onConnectHandler).
 		SetPassword(viper.GetString("MQTT_PASSWORD")).
 		SetReconnectingHandler(reconnecthandler).
-		SetUsername(viper.GetString("MQTT_USER"))
+		SetUsername(viper.GetString("MQTT_USERNAME"))
 
 	client = mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -52,7 +52,7 @@ func Connect(_ context.Context) error {
 	return nil
 }
 
-func Publish(topic string, payload interface{}) {
+func Send(topic string, payload interface{}) {
 	log.Debug("mqtt: publishing")
 	token := client.Publish(topic, 0, true, payload)
 	go func() {
@@ -60,7 +60,10 @@ func Publish(topic string, payload interface{}) {
 		if token.Error() != nil {
 			log.WithError(token.Error()).Error("mqtt: fail to publish")
 		}
-		log.Debug("mqtt: published")
+		log.
+			WithField("topic", topic).
+			WithField("payload", fmt.Sprintf("%s", payload)).
+			Info("mqtt: sent")
 	}()
 }
 

@@ -5,38 +5,43 @@ import (
 	"crypto/tls"
 	"fmt"
 
-	influxdb "github.com/influxdata/influxdb-client-go/v2"
-	influxdbapi "github.com/influxdata/influxdb-client-go/v2/api"
+	influxdb "github.com/influxdata/influxdb-client-go"
+	influxdbapi "github.com/influxdata/influxdb-client-go/api"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 var (
-	api    influxdbapi.WriteAPI
 	client influxdb.Client
+	api    influxdbapi.WriteAPI
+
+	database, host, password, port, username string
 )
+
+func loadConfig() {
+	viper.SetDefault("INFLUX_DATABASE", "test")
+	viper.SetDefault("INFLUX_HOST", "localhost")
+	viper.SetDefault("INFLUX_PORT", "8086")
+
+	database = viper.GetString("INFLUX_DATABASE")
+	host = viper.GetString("INFLUX_HOST")
+	password = viper.GetString("INFLUX_PASSWORD")
+	port = viper.GetString("INFLUX_PORT")
+	username = viper.GetString("INFLUX_USERNAME")
+}
 
 func Connect(_ context.Context) error {
 	log.Debug("influxdb: trying to connect")
 
-	host := viper.GetString("INFLUXDB_HOST")
-	if host == "" {
-		host = "localhost"
-	}
+	loadConfig()
 
-	port := viper.GetInt("INFLUXDB_PORT")
-	if port == 0 {
-		port = 8086
-	}
+	url := fmt.Sprintf("http://%s:%s", host, port)
+	token := fmt.Sprintf("%s:%s", username, password)
 
-	url := fmt.Sprintf("http://%s:%d", host, port)
-
-	token := viper.GetString("INFLUXDB_TOKEN")
-
-	opts := influxdb.DefaultOptions().SetTLSConfig(&tls.Config{
-		InsecureSkipVerify: true,
-	})
-
+	opts := influxdb.DefaultOptions().
+		SetTLSConfig(&tls.Config{
+			InsecureSkipVerify: true,
+		})
 	client = influxdb.NewClientWithOptions(url, token, opts)
 
 	hc, err := client.Health(context.Background())
@@ -52,12 +57,7 @@ func Connect(_ context.Context) error {
 		WithField("message", *hc.Message).
 		Info("influxdb: connected")
 
-	database := viper.GetString("INFLUXDB_DATABASE")
-	if database == "" {
-		database = "test/autogen"
-	}
-
-	api = client.WriteAPI("my-org", database)
+	api = client.WriteAPI("dummy-org", database)
 
 	errorsCh := api.Errors()
 	go func() {
@@ -69,12 +69,14 @@ func Connect(_ context.Context) error {
 	return nil
 }
 
-func Publish(topic string, payload interface{}) {
+func Send(_ string, payload interface{}) {
 	log.Debug("influxdb: publishing")
 	line := payload.([]byte)
 	api.WriteRecord(string(line))
 	api.Flush()
-	log.Debug("influxdb: published")
+	log.
+		WithField("payload", fmt.Sprintf("%s", payload)).
+		Info("influxdb: sent (writed)")
 }
 
 func Disconnect(_ context.Context) {

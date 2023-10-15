@@ -17,7 +17,7 @@ func (a *influxdb) Publish(topic string, message interface{}) error {
 		WithField("publisher", "influxdb").
 		Debug("publisher: trying to publish")
 
-	influxdbclient.Publish(topic, message)
+	influxdbclient.Send(topic, message)
 
 	return nil
 }

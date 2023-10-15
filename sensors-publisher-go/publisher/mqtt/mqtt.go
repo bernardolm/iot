@@ -18,7 +18,7 @@ func (a *mqtt) Publish(topic string, message interface{}) error {
 		WithField("publisher", "mqtt").
 		Debug("publisher: trying to publish")
 
-	mqttclient.Publish(topic, message)
+	mqttclient.Send(topic, message)
 
 	return nil
 }

@@ -3,9 +3,10 @@ package influxdb
 import (
 	"fmt"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/bernardolm/iot/sensors-publisher-go/message"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
-	log "github.com/sirupsen/logrus"
 )
 
 type influxdb struct{}

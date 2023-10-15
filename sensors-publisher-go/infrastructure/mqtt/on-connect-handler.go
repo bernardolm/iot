@@ -12,7 +12,7 @@ var soch = sync.Once{}
 
 var onConnectHandler mqtt.OnConnectHandler = func(c mqtt.Client) {
 	soch.Do(func() {
-		log.Info("mqtt: connected now")
+		log.Info("mqtt: ready (connected now)")
 		time.Sleep(5 * time.Second)
 	})
 }
