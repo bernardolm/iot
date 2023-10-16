@@ -5,7 +5,6 @@ go 1.21
 require (
 	github.com/aws/aws-sdk-go v1.45.25
 	github.com/eclipse/paho.mqtt.golang v1.4.3
-	github.com/google/uuid v1.3.1
 	github.com/influxdata/influxdb-client-go v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.17.0

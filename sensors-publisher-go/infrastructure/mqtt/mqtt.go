@@ -14,9 +14,9 @@ var client mqtt.Client
 func Connect(_ context.Context) error {
 	log.Debug("mqtt: trying to connect")
 
-	if viper.GetBool("DEBUG") {
-		mqtt.DEBUG = log.StandardLogger()
-	}
+	// if viper.GetBool("DEBUG") {
+	// 	mqtt.DEBUG = log.StandardLogger()
+	// }
 
 	host := viper.GetString("MQTT_HOST")
 	if host == "" {

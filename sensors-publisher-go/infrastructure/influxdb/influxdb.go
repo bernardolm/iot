@@ -15,18 +15,16 @@ var (
 	client influxdb.Client
 	api    influxdbapi.WriteAPI
 
-	database, host, password, port, username string
+	database, password, url, username string
 )
 
 func loadConfig() {
 	viper.SetDefault("INFLUX_DATABASE", "test")
-	viper.SetDefault("INFLUX_HOST", "localhost")
-	viper.SetDefault("INFLUX_PORT", "8086")
+	viper.SetDefault("INFLUX_URL", "http://localhost:8086")
 
 	database = viper.GetString("INFLUX_DATABASE")
-	host = viper.GetString("INFLUX_HOST")
 	password = viper.GetString("INFLUX_PASSWORD")
-	port = viper.GetString("INFLUX_PORT")
+	url = viper.GetString("INFLUX_URL")
 	username = viper.GetString("INFLUX_USERNAME")
 }
 
@@ -35,13 +33,15 @@ func Connect(_ context.Context) error {
 
 	loadConfig()
 
-	url := fmt.Sprintf("http://%s:%s", host, port)
 	token := fmt.Sprintf("%s:%s", username, password)
 
 	opts := influxdb.DefaultOptions().
 		SetTLSConfig(&tls.Config{
 			InsecureSkipVerify: true,
 		})
+
+	log.Debugf("influxdb: connecting to %s with '%s'", url, token)
+
 	client = influxdb.NewClientWithOptions(url, token, opts)
 
 	hc, err := client.Health(context.Background())

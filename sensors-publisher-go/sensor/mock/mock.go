@@ -5,7 +5,6 @@ import (
 	"math/rand"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -14,7 +13,7 @@ type mock struct {
 }
 
 func (a *mock) Get() (interface{}, error) {
-	value := aws.Float32(rand.Float32() * 85.96)
+	value := aws.Float32(rand.Float32() * 15.96)
 
 	if value == nil {
 		return nil, fmt.Errorf("sensor: get failed")
@@ -55,6 +54,6 @@ func (a *mock) UnitOfMeasurement() string {
 
 func New() *mock {
 	return &mock{
-		id: "mock_" + uuid.New().String(),
+		id: "sensor_mock",
 	}
 }

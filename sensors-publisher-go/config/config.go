@@ -14,11 +14,13 @@ func Load() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 
+	viper.AutomaticEnv()
+
 	if err := viper.ReadInConfig(); err != nil {
 		switch err.(type) {
 		case viper.ConfigFileNotFoundError, *os.PathError:
 			// NOTE: Need to log out to console regardless of log level
-			log.Info("using config from env vars instead config file")
+			log.Info("using config from env vars instead config file not found")
 		default:
 			log.WithError(err).Error("failed to load config using viper")
 		}
