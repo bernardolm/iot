@@ -1,6 +1,8 @@
 package mqtt
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 
 	mqttclient "github.com/bernardolm/iot/sensors-publisher-go/infrastructure/mqtt"
@@ -8,7 +10,7 @@ import (
 
 type mqtt struct{}
 
-func (a *mqtt) Publish(topic string, message interface{}) error {
+func (a *mqtt) Publish(ctx context.Context, topic string, message interface{}) error {
 	if message == nil {
 		return nil
 	}
@@ -18,7 +20,7 @@ func (a *mqtt) Publish(topic string, message interface{}) error {
 		WithField("publisher", "mqtt").
 		Debug("publisher: trying to publish")
 
-	mqttclient.Send(topic, message)
+	mqttclient.Send(ctx, topic, message)
 
 	return nil
 }

@@ -30,4 +30,4 @@ install-alpine:
 	@PLATFORM=alpine make install
 
 debug:
-	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} tail -f /var/log/sensors-publisher-go/stderr.log
+	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} sudo -S tail -n1000 -f /var/log/sensors-publisher-go/stderr.log

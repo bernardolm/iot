@@ -26,12 +26,12 @@ func (w *worker) AddFlow(s sensor.Sensor, f formatter.Formatter, p []publisher.P
 	})
 }
 
-func (w *worker) Start(_ context.Context) {
+func (w *worker) Start(ctx context.Context) {
 	log.Debug("worker: starting")
 	go func() {
 		for {
 			for _, flow := range w.flows {
-				flow.Start()
+				flow.Start(ctx)
 			}
 			log.Debug("worker: waiting")
 			time.Sleep(w.delta)
@@ -40,7 +40,7 @@ func (w *worker) Start(_ context.Context) {
 }
 
 func (w *worker) Stop(_ context.Context) error {
-	log.Warn("worker: stopping")
+	log.Info("worker: stopped")
 	return nil
 }
 

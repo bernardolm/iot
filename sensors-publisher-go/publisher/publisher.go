@@ -1,5 +1,7 @@
 package publisher
 
+import "context"
+
 type Publisher interface {
-	Publish(topic string, message interface{}) error
+	Publish(_ context.Context, topic string, message interface{}) error
 }

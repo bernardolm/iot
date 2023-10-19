@@ -37,9 +37,7 @@ func main() {
 		log.Error(err)
 	}
 
-	if err := influxdb.Connect(ctx); err != nil {
-		log.Error(err)
-	}
+	influxdb.Start(ctx)
 
 	pbMqtt := publishermqtt.New()
 	pbInfluxdb := publisherinfluxdb.New()
@@ -84,12 +82,14 @@ func main() {
 	w.Start(ctx)
 
 	go func() {
-		log.Info("starting reboot countdown")
-
 		viper.SetDefault("SYSTEM_REBOOT_TIME", "1h")
-		time.Sleep(viper.GetDuration("SYSTEM_REBOOT_TIME"))
+		wait := viper.GetDuration("SYSTEM_REBOOT_TIME")
 
-		log.Warn("rebooting system")
+		log.Infof("rebooting system in %s", wait)
+
+		time.Sleep(wait)
+		log.Info("rebooting now")
+
 		if err := syscall.Reboot(syscall.LINUX_REBOOT_CMD_RESTART); err != nil {
 			log.WithError(err).Errorf("can't reboot system, please verify the error")
 		}
@@ -131,8 +131,8 @@ func main() {
 		log.Error(err)
 	}
 
-	mqtt.Disconnect(ctx)
-	influxdb.Disconnect(ctx)
+	mqtt.Close(ctx)
+	influxdb.Finish(ctx)
 
 	log.Info("cmd: graceful shutdown complete")
 }

@@ -1,12 +1,14 @@
 package stdout
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 )
 
 type stdout struct{}
 
-func (a *stdout) Publish(topic string, message interface{}) error {
+func (a *stdout) Publish(_ context.Context, topic string, message interface{}) error {
 	if message == nil {
 		return nil
 	}

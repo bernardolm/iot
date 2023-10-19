@@ -52,7 +52,7 @@ func Connect(_ context.Context) error {
 	return nil
 }
 
-func Send(topic string, payload interface{}) {
+func Send(_ context.Context, topic string, payload interface{}) {
 	log.Debug("mqtt: publishing")
 	token := client.Publish(topic, 0, true, payload)
 	go func() {
@@ -60,14 +60,13 @@ func Send(topic string, payload interface{}) {
 		if token.Error() != nil {
 			log.WithError(token.Error()).Error("mqtt: fail to publish")
 		}
-		log.
-			WithField("topic", topic).
+		log.WithField("topic", topic).
 			WithField("payload", fmt.Sprintf("%s", payload)).
 			Info("mqtt: sent")
 	}()
 }
 
-func Disconnect(_ context.Context) {
+func Close(_ context.Context) {
 	log.Debug("mqtt: disconnecting")
 	client.Disconnect(500)
 	log.Info("mqtt: disconnected")
