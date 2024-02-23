@@ -3,19 +3,25 @@ package influxdb
 import (
 	"fmt"
 
-	"github.com/spf13/viper"
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 )
 
 var database, password, url, username, token string
 
 func loadConfig() {
-	viper.SetDefault("INFLUX_DATABASE", "test")
-	viper.SetDefault("INFLUX_URL", "http://localhost:8086")
+	database = config.Get[string]("INFLUX_DATABASE")
+	if database == "" {
+		database = "test"
+	}
 
-	database = viper.GetString("INFLUX_DATABASE")
-	password = viper.GetString("INFLUX_PASSWORD")
-	url = viper.GetString("INFLUX_URL")
-	username = viper.GetString("INFLUX_USERNAME")
+	password = config.Get[string]("INFLUX_PASSWORD")
+
+	url = config.Get[string]("INFLUX_URL")
+	if url == "" {
+		url = "localhost:8086"
+	}
+
+	username = config.Get[string]("INFLUX_USERNAME")
 
 	token = fmt.Sprintf("%s:%s", username, password)
 }

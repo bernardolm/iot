@@ -1,12 +1,12 @@
 package logging
 
 import (
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 func Init() {
-	ll := viper.GetString("LOG_LEVEL")
+	ll := config.Get[string]("LOG_LEVEL")
 
 	var level log.Level = log.InfoLevel
 

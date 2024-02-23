@@ -11,7 +11,7 @@ error_log="/var/log/${RC_SVCNAME}/stderr.log"
 
 # supervise_daemon_args="--stdout /var/log/yourlogfile"
 
-output_logger_arg="--stdout-logger /usr/bin/logger"
+# output_logger_arg="--stdout-logger /usr/bin/logger"
 
 # start_pre() {
 #     checkpath --directory /etc/${RC_SVCNAME}

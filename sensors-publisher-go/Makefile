@@ -1,7 +1,17 @@
 ifneq (,$(wildcard ./config.env))
     include config.env
     export
+	ENV_FILE_PARAM = --env-file config.env
 endif
+
+reset:
+	@reset
+
+air: reset
+	@command -v air || go install github.com/cosmtrek/air@latest
+	@command -v expect_unbuffer || sudo apt install expect
+	@command -v goimports || go install golang.org/x/tools/cmd/goimports@latest
+	@expect_unbuffer air -build.exclude_dir=tmp -c=.air.toml -d
 
 start:
 	@go run cmd/console/main.go
@@ -11,16 +21,16 @@ clear:
 	@rm -rf dist/*
 
 build: clear
-	@GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
+	# @GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
 	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o bin/sensors-publisher-go cmd/console/main.go
 	@sleep 1
-	@upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
+	# @command -v upx || sudo apt install upx-ucl
+	# @upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
 
 install: build
-	@cp -f service/${PLATFORM}/* dist/
+	@cp -f service/${PLATFORM}/* bin/* dist/
 	@ls -ah dist
-	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "mkdir -p /tmp/sensors-publisher-go"
-	@scp dist/* ${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go
+	@rsync -r ./dist/* "${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go"
 	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "/tmp/sensors-publisher-go/install.sh"
 
 install-debian:
@@ -30,4 +40,4 @@ install-alpine:
 	@PLATFORM=alpine make install
 
 debug:
-	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} sudo -S tail -n1000 -f /var/log/sensors-publisher-go/stderr.log
+	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} sudo -S tail -n100 -f /var/log/sensors-publisher-go/stderr.log

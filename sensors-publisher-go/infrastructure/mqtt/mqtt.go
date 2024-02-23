@@ -6,7 +6,8 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 )
 
 var client mqtt.Client
@@ -14,16 +15,16 @@ var client mqtt.Client
 func Connect(_ context.Context) error {
 	log.Debug("mqtt: trying to connect")
 
-	// if viper.GetBool("DEBUG") {
-	// 	mqtt.DEBUG = log.StandardLogger()
-	// }
+	if config.Get[bool]("DEBUG") {
+		mqtt.DEBUG = log.StandardLogger()
+	}
 
-	host := viper.GetString("MQTT_HOST")
+	host := config.Get[string]("MQTT_HOST")
 	if host == "" {
 		host = "localhost"
 	}
 
-	port := viper.GetInt("MQTT_PORT")
+	port := config.Get[int]("MQTT_PORT")
 	if port == 0 {
 		port = 1883
 	}
@@ -38,9 +39,9 @@ func Connect(_ context.Context) error {
 		SetConnectionLostHandler(connectionLostHandler).
 		SetConnectRetry(true).
 		SetOnConnectHandler(onConnectHandler).
-		SetPassword(viper.GetString("MQTT_PASSWORD")).
+		SetPassword(config.Get[string]("MQTT_PASSWORD")).
 		SetReconnectingHandler(reconnecthandler).
-		SetUsername(viper.GetString("MQTT_USERNAME"))
+		SetUsername(config.Get[string]("MQTT_USERNAME"))
 
 	client = mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -54,7 +55,7 @@ func Connect(_ context.Context) error {
 
 func Send(_ context.Context, topic string, payload interface{}) {
 	log.Debug("mqtt: publishing")
-	token := client.Publish(topic, 0, true, payload)
+	token := client.Publish(topic, 0, false, payload)
 	go func() {
 		_ = token.Wait()
 		if token.Error() != nil {

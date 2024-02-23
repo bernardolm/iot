@@ -28,19 +28,18 @@ func connect(_ context.Context) {
 			InsecureSkipVerify: true,
 		})
 
-	log.Debugf("influxdb: connecting to %s with '%s'", url, token)
+	log.Debugf("influxdb: connecting to '%q' with '%q'", url, token)
 
 	client = influx.NewClientWithOptions(url, token, opts)
 
 	if client == nil {
-		log.Error("influxdb: couldn't create a client")
+		log.Fatal("influxdb: couldn't create a client")
 		return
 	}
 
 	healthcheck, err := client.Health(context.Background())
 	if err != nil {
-		log.WithError(err).Error("influxdb: health check failed")
-		return
+		log.WithError(err).Fatal("influxdb: health check failed")
 	}
 
 	log.WithField("status", healthcheck.Status).

@@ -2,31 +2,57 @@ package config
 
 import (
 	"os"
+	"time"
 
+	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"github.com/spf13/cast"
 )
 
 // Load env vars and config file to get app config
 func Load() {
-	viper.AddConfigPath("./")
-	viper.AddConfigPath("/usr/share/sensors-publisher-go/")
-	viper.SetConfigName("config")
-	viper.SetConfigType("env")
+	log.SetLevel(log.DebugLevel)
 
-	viper.AutomaticEnv()
+	if err := godotenv.
+		Load(
+			"/etc/sensors-publisher-go/config.env",
+			"./config.env",
+		); err != nil {
+		log.WithError(err).Warn("error loading some env file")
+	}
+}
 
-	if err := viper.ReadInConfig(); err != nil {
-		switch err.(type) {
-		case viper.ConfigFileNotFoundError, *os.PathError:
-			// NOTE: Need to log out to console regardless of log level
-			log.Info("using config from env vars instead config file not found")
-		default:
-			log.WithError(err).Error("failed to load config using viper")
-		}
+// Get value from env vars or config file
+func Get[T any](key string) T {
+	var out T
+	var value any
+
+	rawValue := os.Getenv(key)
+	if rawValue == "" {
+		log.Errorf("not found value for key %s or doesn't exist", key)
+		return out
 	}
 
-	if viper.GetBool("DEBUG") {
-		viper.Debug()
+	log.Debugf("value '%s' was recovered by ENV key '%s'", rawValue, key)
+
+	switch any(out).(type) {
+	case bool:
+		value = cast.ToBool(rawValue)
+	case float64:
+		value = cast.ToFloat64(rawValue)
+	case int:
+		value = cast.ToInt(rawValue)
+	case int64:
+		value = cast.ToInt64(rawValue)
+	case string:
+		value = rawValue
+	case time.Duration:
+		value = cast.ToDuration(rawValue)
+	default:
+		value = *new(T)
+		log.Errorf("unknown type to cast for key %s", key)
 	}
+
+	return value.(T)
 }

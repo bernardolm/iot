@@ -1,17 +1,23 @@
 root = "."
+tmp_dir = "tmp"
 
 [build]
-  bin = "/usr/local/go/bin/go run cmd/console/main.go"
-  cmd = "/home/bernardo/gopath/bin/gofumpt -e -l -w ."
-  delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
-  exclude_regex = ["_test.go"]
-  include_ext = ["go", "tpl", "tmpl", "html", "toml", "env"]
-  kill_delay = "0s"
-  stop_on_error = false
+  pre_cmd = [
+    "echo 'build.pre_cmd'",
+    # "goimports -l -w -d ./..",
+    "go mod tidy",
+  ]
+  cmd = "echo 'build.cmd' ; go build -o ~/tmp/bin_for_air cmd/console/main.go"
+  post_cmd = ["echo 'build.post_cmd'"]
 
-[misc]
-  clean_on_exit = false
+  full_bin = "echo 'build.full_bin' ; ~/tmp/bin_for_air"
 
-[screen]
-  clear_on_rebuild = true
+  include_ext = ["go", "toml", "yaml", "yml", "env"]
+  exclude_dir = ["vendor", "tmp", "dist", "service"]
+  include_file = ["Makefile"]
+  exclude_regex = ["_test\\.go", "\\.md", "\\.sample"]
+  follow_symlink = true
+
+  log = "tmp/air.log"
+  stop_on_error = true
+  send_interrupt = true

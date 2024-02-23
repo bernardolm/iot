@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"os"
-	"os/signal"
 	"syscall"
 	"time"
 
@@ -96,9 +94,9 @@ func main() {
 	}()
 
 	ec := make(chan error)
-	sc := make(chan os.Signal, 1)
+	// sr := make(chan os.Signal, 1)
 
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM) // nolint
+	// signal.Notify(sr, syscall.SIGINT, syscall.SIGTERM) // nolint
 
 	// go func() {
 	// 	time.Sleep(10 * time.Second)
@@ -121,8 +119,8 @@ func main() {
 		log.Warn("cmd: received message on error channel")
 		// ctxCancelFunc()
 		log.Error(err)
-	case <-sc:
-		log.Warn("cmd: shutdown requested")
+	// case <-sr:
+	// 	log.Warn("cmd: shutdown requested")
 	case <-ctx.Done():
 		log.Warn("cmd: context done, context cancel func called")
 	}
