@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"syscall"
-	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 
 	"github.com/bernardolm/iot/sensors-publisher-go/config"
 	formatterhomeassistant "github.com/bernardolm/iot/sensors-publisher-go/formatter/homeassistant"
@@ -79,19 +76,19 @@ func main() {
 
 	w.Start(ctx)
 
-	go func() {
-		viper.SetDefault("SYSTEM_REBOOT_TIME", "1h")
-		wait := viper.GetDuration("SYSTEM_REBOOT_TIME")
+	// go func() {
+	// 	viper.SetDefault("SYSTEM_REBOOT_TIME", "1h")
+	// 	wait := viper.GetDuration("SYSTEM_REBOOT_TIME")
 
-		log.Infof("rebooting system in %s", wait)
+	// 	log.Infof("rebooting system in %s", wait)
 
-		time.Sleep(wait)
-		log.Info("rebooting now")
+	// 	time.Sleep(wait)
+	// 	log.Info("rebooting now")
 
-		if err := syscall.Reboot(syscall.LINUX_REBOOT_CMD_RESTART); err != nil {
-			log.WithError(err).Errorf("can't reboot system, please verify the error")
-		}
-	}()
+	// 	if err := syscall.Reboot(syscall.LINUX_REBOOT_CMD_RESTART); err != nil {
+	// 		log.WithError(err).Errorf("can't reboot system, please verify the error")
+	// 	}
+	// }()
 
 	ec := make(chan error)
 	// sr := make(chan os.Signal, 1)

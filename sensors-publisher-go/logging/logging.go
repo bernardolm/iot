@@ -1,17 +1,19 @@
 package logging
 
 import (
-	"github.com/bernardolm/iot/sensors-publisher-go/config"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 )
 
 func Init() {
-	ll := config.Get[string]("LOG_LEVEL")
-
 	var level log.Level = log.InfoLevel
 
-	if ll != "" {
-		level, _ = log.ParseLevel(ll)
+	if ll := config.Get[string]("LOG_LEVEL"); ll != "" {
+		var err error
+		if level, err = log.ParseLevel(ll); err != nil {
+			log.WithError(err).Error("logging failed to set log level")
+		}
 	}
 
 	log.SetLevel(level)

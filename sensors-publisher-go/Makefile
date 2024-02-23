@@ -21,15 +21,15 @@ clear:
 	@rm -rf dist/*
 
 build: clear
-	# @GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
+	@# GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
 	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o bin/sensors-publisher-go cmd/console/main.go
 	@sleep 1
-	# @command -v upx || sudo apt install upx-ucl
-	# @upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
+	@# command -v upx || sudo apt install upx-ucl
+	@# upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
 
 install: build
 	@cp -f service/${PLATFORM}/* bin/* dist/
-	@ls -ah dist
+	@ls -lh dist
 	@rsync -r ./dist/* "${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go"
 	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "/tmp/sensors-publisher-go/install.sh"
 
