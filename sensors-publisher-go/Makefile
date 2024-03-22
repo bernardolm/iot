@@ -1,7 +1,7 @@
-ifneq (,$(wildcard ./config.env))
-    include config.env
+ifneq (,$(wildcard ./dev.env))
+    include dev.env
     export
-	ENV_FILE_PARAM = --env-file config.env
+	ENV_FILE_PARAM = --env-file dev.env
 endif
 
 reset:
@@ -28,7 +28,7 @@ build: clear
 	@# upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
 
 install: build
-	@cp -f service/${PLATFORM}/* bin/* dist/
+	@cp -f service/${PLATFORM}/* bin/* prod.env dist/
 	@ls -lh dist
 	@rsync -r ./dist/* "${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go"
 	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "/tmp/sensors-publisher-go/install.sh"
@@ -40,4 +40,4 @@ install-alpine:
 	@PLATFORM=alpine make install
 
 debug:
-	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} sudo -S tail -n100 -f /var/log/sensors-publisher-go/stderr.log
+	ssh ${SYSTEM_USER}@${SYSTEM_HOST} "sudo -S tail -n100 -f /var/log/sensors-publisher-go/stderr.log"

@@ -7,6 +7,7 @@ fi
 INSTALL_PATH=/usr/share/sensors-publisher-go
 LOG_PATH=/var/log/sensors-publisher-go
 TMP_PATH=/tmp/sensors-publisher-go
+ENV_PATH=/etc/sensors-publisher-go
 
 ${SUDO} rc-service sensors-publisher-go stop || true
 ${SUDO} rc-update delete sensors-publisher-go || true
@@ -17,6 +18,7 @@ ${SUDO} rm -rf "${LOG_PATH}/*" "${INSTALL_PATH}/*" || \
 
 ${SUDO} mv -f "${TMP_PATH}/sensors-publisher-go" "${INSTALL_PATH}/sensors-publisher-go"
 ${SUDO} mv -f "${TMP_PATH}/autostart" /etc/init.d/sensors-publisher-go
+${SUDO} mv -f "${TMP_PATH}/prod.env" "${ENV_PATH}/config.env"
 
 ls -lh "/etc/sensors-publisher-go"
 ls -lh "${INSTALL_PATH}"
