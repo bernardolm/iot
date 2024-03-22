@@ -52,7 +52,7 @@ func (a *ds18a20) Model() string {
 }
 
 func (a *ds18a20) Name() string {
-	return fmt.Sprintf("%s %s sensor", a.Model(), a.DeviceClass())
+	return fmt.Sprintf("%s_%s_sensor", a.Model(), a.DeviceClass())
 }
 
 func (a *ds18a20) UnitOfMeasurement() string {
