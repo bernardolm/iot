@@ -33,7 +33,7 @@ func (w *worker) Start(ctx context.Context) {
 			for _, flow := range w.flows {
 				flow.Start(ctx)
 			}
-			log.Debug("worker: waiting")
+			log.Debugf("worker: waiting %s", w.delta)
 			time.Sleep(w.delta)
 		}
 	}()
