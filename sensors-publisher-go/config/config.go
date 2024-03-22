@@ -17,7 +17,7 @@ func Load() {
 	if err := godotenv.
 		Load(
 			"/etc/sensors-publisher-go/config.env",
-			"./config.env",
+			"./dev.env",
 		); err != nil {
 		log.WithError(err).Warn("error loading some env file")
 	}
