@@ -4,12 +4,14 @@ import (
 	"context"
 
 	log "github.com/sirupsen/logrus"
+
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 )
 
 type stdout struct{}
 
 func (a *stdout) Publish(_ context.Context, topic string, message interface{}) error {
-	if message == nil {
+	if !config.Get[bool]("DEBUG") || message == nil {
 		return nil
 	}
 
