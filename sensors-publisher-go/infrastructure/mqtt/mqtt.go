@@ -55,7 +55,7 @@ func Connect(_ context.Context) error {
 
 func Send(_ context.Context, topic string, payload interface{}) {
 	log.Debug("mqtt: publishing")
-	token := client.Publish(topic, 0, false, payload)
+	token := client.Publish(topic, 0, true, payload)
 	go func() {
 		_ = token.Wait()
 		if token.Error() != nil {
