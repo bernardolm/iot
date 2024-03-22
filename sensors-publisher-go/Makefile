@@ -21,6 +21,7 @@ clear:
 	@rm -rf dist/*
 
 build: clear
+	@go mod tidy
 	@# GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
 	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o bin/sensors-publisher-go cmd/console/main.go
 	@sleep 1
