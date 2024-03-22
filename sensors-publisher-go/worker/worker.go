@@ -5,8 +5,8 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 
+	"github.com/bernardolm/iot/sensors-publisher-go/config"
 	"github.com/bernardolm/iot/sensors-publisher-go/formatter"
 	"github.com/bernardolm/iot/sensors-publisher-go/publisher"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
@@ -46,7 +46,7 @@ func (w *worker) Stop(_ context.Context) error {
 
 func New() *worker {
 	w := worker{
-		delta: viper.GetDuration("WORKER_DELTA"),
+		delta: config.Get[time.Duration]("WORKER_DELTA"),
 	}
 
 	if w.delta == 0 {
