@@ -1,35 +1,92 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ "${USER}" != "root" ]; then
-    export SUDO="sudo "
-fi
+set -e
 
-INSTALL_PATH=/usr/share/sensors-publisher-go
-LOG_PATH=/var/log/sensors-publisher-go
-TMP_PATH=/tmp/sensors-publisher-go
-ENV_PATH=/etc/sensors-publisher-go
+echo "$ workdir is $(pwd)"
 
-${SUDO} rc-service sensors-publisher-go stop || true
-${SUDO} rc-update delete sensors-publisher-go || true
-${SUDO} killall -9 sensors-publisher-go || true
+# shellcheck source=/dev/null
+source base.env
 
-${SUDO} rm -rf "${LOG_PATH}/*" "${INSTALL_PATH}/*" || \
-        mkdir -p "${LOG_PATH}" "${INSTALL_PATH}"
+export ENV_PATH="/etc/$RC_SVCNAME"
+export ERR_LOG="/var/log/$RC_SVCNAME/stderr.log"
+export INSTALL_PATH="/usr/share/$RC_SVCNAME"
+export LOG_PATH="/var/log/$RC_SVCNAME"
+export OUTPUT_LOG="/var/log/$RC_SVCNAME/stdout.log"
+export TMP_PATH="/tmp/$RC_SVCNAME"
 
-${SUDO} mv -f "${TMP_PATH}/sensors-publisher-go" "${INSTALL_PATH}/sensors-publisher-go"
-${SUDO} mv -f "${TMP_PATH}/autostart" /etc/init.d/sensors-publisher-go
-${SUDO} mv -f "${TMP_PATH}/prod.env" "${ENV_PATH}/config.env"
+function stop() {
+    rc-service "$RC_SVCNAME" stop || true
+    rc-update delete "$RC_SVCNAME" || true
+    killall -9 "$RC_SVCNAME" 2>/dev/null || true
+}
 
-ls -lh "/etc/sensors-publisher-go"
-ls -lh "${INSTALL_PATH}"
-ls -lh "${LOG_PATH}"
-ls -lh "${TMP_PATH}"
+function clear() {
+    rm -rf "${LOG_PATH:?}/*" "${INSTALL_PATH:?}/*" || \
+        mkdir -p "$LOG_PATH" "$INSTALL_PATH"
 
-${SUDO} rc-update add sensors-publisher-go default
-${SUDO} rc-service sensors-publisher-go start
-${SUDO} rc-service sensors-publisher-go status
+    echo $ dest paths empty
+}
 
-echo "installation completed successfully. now only showing recent log."
-echo "you can exit with ctrl+c"
+function check_user() {
+    id "$1" &>/dev/null
+}
 
-${SUDO} tail -n20 -f /var/log/sensors-publisher-go/stderr.log
+function add_user() {
+    adduser -D "$USER_WORKER"
+    addgroup "$USER_WORKER" root
+}
+
+function install() {
+    echo $ checking user
+
+    if ! check_user "$USER_WORKER"; then
+        add_user
+        echo "user $USER_WORKER added"
+    fi
+
+    echo $ moving files
+
+    mv -f "$TMP_PATH/$RC_SVCNAME" "$INSTALL_PATH/$RC_SVCNAME"
+    mv -f "$TMP_PATH/prod.env" "$ENV_PATH/config.env"
+    mv -f "$TMP_PATH/autostart" "/etc/init.d/$RC_SVCNAME"
+
+    echo $ fixing log files
+
+    if [ ! -f "$ERR_LOG" ]; then
+        touch "$ERR_LOG"
+    fi
+
+    if [ ! -f "$OUTPUT_LOG" ]; then
+        touch "$OUTPUT_LOG"
+    fi
+
+    echo $ fixing permissions
+
+    chmod a+rw "$ENV_PATH/config.env"
+    chmod a+rw "$ERR_LOG"
+    chmod a+rw "$OUTPUT_LOG"
+
+    echo $ installation completed successfully
+}
+
+function check_install() {
+    echo $ "files in ENV_PATH: $(ls -h "$ENV_PATH")"
+    echo $ "files in INSTALL_PATH: $(ls -h "$INSTALL_PATH")"
+    echo $ "files in LOG_PATH: $(ls -h "$LOG_PATH")"
+    echo $ "files in TMP_PATH: $(ls -h "$TMP_PATH")"
+}
+
+function start() {
+    rc-update add "$RC_SVCNAME" default
+    rc-service "$RC_SVCNAME" start
+    rc-service "$RC_SVCNAME" status
+}
+
+stop
+clear
+install
+check_install
+start
+
+echo $ now it will only show recent logs. you can exit with ctrl+c.
+tail -n30 -f "$ERR_LOG"

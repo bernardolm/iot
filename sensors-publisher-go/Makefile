@@ -29,10 +29,10 @@ build: clear
 	@# upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
 
 install: build
-	@cp -f service/${PLATFORM}/* bin/* prod.env dist/
-	@ls -lh dist
+	@cp -f prod.env service/base.env service/${PLATFORM}/* bin/* dist/
+	@ls -h dist
 	@rsync -r ./dist/* "${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go"
-	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "/tmp/sensors-publisher-go/install.sh"
+	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "cd /tmp/sensors-publisher-go; sudo ./install.sh"
 
 install-debian:
 	@PLATFORM=debian make install
