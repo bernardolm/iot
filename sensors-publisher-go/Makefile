@@ -1,44 +1,43 @@
-ifneq (,$(wildcard ./dev.env))
-    include dev.env
-    export
-	ENV_FILE_PARAM = --env-file dev.env
-endif
+.EXPORT_ALL_VARIABLES:
+
+SSH_PUB_KEY=$(shell cat ${HOME}/.ssh/id_ed25519.pub)
+docker_container_name=alpine-sensors
+docker_image_name="${GITHUB_USER}/${docker_container_name}:latest"
 
 reset:
 	@reset
 
 air: reset
 	@command -v air || go install github.com/cosmtrek/air@latest
-	@command -v expect_unbuffer || sudo apt install expect
+	@command -v expect_unbuffer || sudo apt install -y expect
 	@command -v goimports || go install golang.org/x/tools/cmd/goimports@latest
 	@expect_unbuffer air -build.exclude_dir=tmp -c=.air.toml -d
 
 start:
 	@go run cmd/console/main.go
 
-clear:
-	@rm -rf bin/*
-	@rm -rf dist/*
-
-build: clear
-	@go mod tidy
-	@# GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/sensors-publisher-go-amd64 cmd/console/main.go
-	@GOOS=linux GOARCH=arm go build -ldflags "-s -w" -o bin/sensors-publisher-go cmd/console/main.go
-	@sleep 1
-	@# command -v upx || sudo apt install upx-ucl
-	@# upx --lzma -o dist/sensors-publisher-go bin/sensors-publisher-go
-
-install: build
-	@cp -f prod.env service/base.env service/${PLATFORM}/* bin/* dist/
-	@ls -h dist
-	@rsync -r ./dist/* "${SYSTEM_USER}@${SYSTEM_HOST}:/tmp/sensors-publisher-go"
-	@ssh -t ${SYSTEM_USER}@${SYSTEM_HOST} "cd /tmp/sensors-publisher-go; sudo ./install.sh"
-
-install-debian:
-	@PLATFORM=debian make install
+install:
+	@./installer/start.sh
 
 install-alpine:
-	@PLATFORM=alpine make install
+	@ARCH=arm64 OS=alpine make install
+
+install-debian:
+	@ARCH=amd64 OS=debian make install
+
+install-docker:
+	@(docker stop ${docker_container_name} 2>/dev/null && sleep 1) || true
+	@docker build --no-cache \
+		--progress=tty \
+		--build-arg SSH_PUB_KEY="${SSH_PUB_KEY}" \
+		-f "docker/Dockerfile" \
+		-t ${docker_image_name} \
+		docker
+	@docker run -d --rm --privileged \
+		--name ${docker_container_name} \
+		${docker_image_name} /bin/bash
+	@ARCH=amd64 OS=alpine-docker make install
 
 debug:
-	ssh ${SYSTEM_USER}@${SYSTEM_HOST} "sudo -S tail -n100 -f /var/log/sensors-publisher-go/stderr.log"
+	@source dist/install.dev
+	@ssh ${SYSTEM_USER}@${SYSTEM_HOST} "sudo -S tail -n50 -f ${LOG_FILEPATH}"

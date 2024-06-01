@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh
+
+# . /etc/init.d/functions
+
+#command_background="no"
+
+#command_progress="yes"
+
+#command_user="root"
+
+# command="/usr/share/$RC_SVCNAME/$RC_SVCNAME"
+
+command="/usr/share/sensors-publisher-go/sensors-publisher-go"
+
+# directory="/usr/share/$RC_SVCNAME"
+
+directory="/usr/share/sensors-publisher-go"
+
+# pidfile="/var/run/$RC_SVCNAME.pid"

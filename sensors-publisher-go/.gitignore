@@ -1,11 +1,11 @@
 __debug*
-*.env
+*.env*
 *.txt
 bin
 console*
 dist
-tmp
+tmp/
 
 !bin/.keep
 !dist/.keep
-!service/base.env
+!tmp/.keep

@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh
+
+# command_user="#WORKER#"
+#error_log="/var/log/${RC_SVCNAME}.err.log"
+#output_log="/var/log/${RC_SVCNAME}.out.log"
+command_background=true
+command_progress=false
+command_user="root"
+command="/usr/share/${RC_SVCNAME}/${RC_SVCNAME}"
+directory="/usr/share/${RC_SVCNAME}"
+pidfile="/run/${RC_SVCNAME}.pid"

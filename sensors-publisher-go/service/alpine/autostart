@@ -1,9 +1,0 @@
-#!/sbin/openrc-run
-# shellcheck shell=sh
-
-command_background=true
-command_user="worker:root"
-command="/usr/share/sensors-publisher-go/sensors-publisher-go"
-error_log="/var/log/${RC_SVCNAME}/stderr.log"
-output_log="/var/log/${RC_SVCNAME}/stdout.log"
-pidfile="/run/${RC_SVCNAME}.pid"
