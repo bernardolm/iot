@@ -1,0 +1,3 @@
+[submodule "makeself"]
+	path = makeself
+	url = git@github.com:megastep/makeself.git
