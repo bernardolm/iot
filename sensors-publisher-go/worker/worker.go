@@ -50,7 +50,7 @@ func New() *worker {
 	}
 
 	if w.delta == 0 {
-		w.delta = 5 * time.Second
+		w.delta = 5 * 60 * time.Second
 	}
 
 	return &w

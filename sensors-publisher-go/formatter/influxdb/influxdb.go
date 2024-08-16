@@ -18,9 +18,9 @@ func (a *influxdb) Build(s sensor.Sensor) []message.Message {
 	}
 
 	line := fmt.Sprintf("%s,entity_id=%s %s=%f",
-		s.UnitOfMeasurement(),
-		s.UniqueID(),
 		s.DeviceClass(),
+		s.UniqueID(),
+		s.UnitOfMeasurement(),
 		value)
 
 	messages := []message.Message{{Body: []byte(line)}}

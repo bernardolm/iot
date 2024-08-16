@@ -16,7 +16,7 @@ func Load() {
 
 	if err := godotenv.
 		Load(
-			"/etc/sensors-publisher-go/config.env",
+			"/usr/share/sensors-publisher-go/.env",
 			"./dev.env",
 		); err != nil {
 		log.WithError(err).Warn("error loading some env file")
@@ -30,7 +30,7 @@ func Get[T any](key string) T {
 
 	rawValue := os.Getenv(key)
 	if rawValue == "" {
-		log.Errorf("not found value for key %s or doesn't exist", key)
+		log.Debugf("not found value for key %s or doesn't exist", key)
 		return out
 	}
 

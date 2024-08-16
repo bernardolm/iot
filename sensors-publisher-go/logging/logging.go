@@ -1,12 +1,9 @@
 package logging
 
 import (
-	// "log/syslog"
+	"os"
 
-	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
-
-	// lSyslog "github.com/sirupsen/logrus/hooks/syslog"
 
 	"github.com/bernardolm/iot/sensors-publisher-go/config"
 )
@@ -21,8 +18,8 @@ func Init() {
 		}
 	}
 
-	log := logrus.New()
 	log.SetLevel(level)
+	log.SetOutput(os.Stdout)
 
 	// hook, err := lSyslog.
 	// 	NewSyslogHook(

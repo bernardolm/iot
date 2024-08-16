@@ -76,48 +76,12 @@ func main() {
 
 	w.Start(ctx)
 
-	// go func() {
-	// 	viper.SetDefault("SYSTEM_REBOOT_TIME", "1h")
-	// 	wait := viper.GetDuration("SYSTEM_REBOOT_TIME")
-
-	// 	log.Infof("rebooting system in %s", wait)
-
-	// 	time.Sleep(wait)
-	// 	log.Info("rebooting now")
-
-	// 	if err := syscall.Reboot(syscall.LINUX_REBOOT_CMD_RESTART); err != nil {
-	// 		log.WithError(err).Errorf("can't reboot system, please verify the error")
-	// 	}
-	// }()
-
 	ec := make(chan error)
-	// sr := make(chan os.Signal, 1)
-
-	// signal.Notify(sr, syscall.SIGINT, syscall.SIGTERM) // nolint
-
-	// go func() {
-	// 	time.Sleep(10 * time.Second)
-	// 	log.Warn("cmd: calling context cancel func")
-	// 	ctxCancelFunc()
-	// }()
-
-	// go func() {
-	// 	time.Sleep(90 * time.Second)
-	// 	log.Warn("cmd: throwing error to test")
-	// 	// panic("my error test")
-	// 	ec <- errors.New("cmd: some dummy error")
-	// }()
-
-	// time.Sleep(3 * time.Second)
-	// ctxCancelFunc()
 
 	select {
 	case err := <-ec:
 		log.Warn("cmd: received message on error channel")
-		// ctxCancelFunc()
 		log.Error(err)
-	// case <-sr:
-	// 	log.Warn("cmd: shutdown requested")
 	case <-ctx.Done():
 		log.Warn("cmd: context done, context cancel func called")
 	}
