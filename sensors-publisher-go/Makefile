@@ -20,7 +20,7 @@ install:
 	@./installer/start.sh
 
 install-alpine:
-	@ARCH=arm64 OS=alpine make install
+	@ARCH="arm GOARM=7" OS=alpine make install
 
 install-debian:
 	@ARCH=amd64 OS=debian make install
