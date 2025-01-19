@@ -20,17 +20,20 @@ func (a *ds18a20) Get() (interface{}, error) {
 	}
 
 	t, err := ds18b20.Temperature(a.id)
-	if err == nil {
-		log.WithField("name", "ds18a20").
-			WithField("id", a.id).
-			WithField("value", t).
-			Debug("sensor: retrieved value")
-		value = &t
+	if err != nil {
+		return nil, err
 	}
 
 	if value == nil {
-		return nil, fmt.Errorf("sensor: get failed")
+		return nil, fmt.Errorf("sensor: get value failed")
 	}
+
+	log.WithField("name", "ds18a20").
+		WithField("id", a.id).
+		WithField("value", t).
+		Debug("sensor: retrieved value")
+
+	value = &t
 
 	return *value, nil
 }
