@@ -1,4 +1,3 @@
-makeself
 *.env
 bin
 tmp
