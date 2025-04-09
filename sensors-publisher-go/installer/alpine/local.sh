@@ -12,8 +12,8 @@ echo "$ sh: USER_PWD=${USER_PWD}"
 # shellcheck source=/dev/null
 source .env
 
-INSTALL_PATH="/usr/share/$RC_SVCNAME"
-LOG_PATH="/var/log/$RC_SVCNAME.log"
+INSTALL_PATH="/$RC_SVCNAME"
+LOG_FILEPATH="/var/log/$RC_SVCNAME.log"
 
 function stop() {
     sudo rc-service "$RC_SVCNAME" stop || true
@@ -24,7 +24,7 @@ function stop() {
 function clear() {
     echo "$ sh: cleaning..."
 
-    sudo rm -rf "$INSTALL_PATH" "$LOG_PATH"
+    sudo rm -rf "$INSTALL_PATH" "$LOG_FILEPATH"
     sudo mkdir -m a+r "$INSTALL_PATH"
 
     check_install
@@ -66,8 +66,8 @@ function install() {
 }
 
 function check_install() {
-    echo "$ sh: files in INSTALL_PATH ($INSTALL_PATH): [$(ls -aCmN $INSTALL_PATH)]"
-    echo "$ sh: files in TMP_PATH ($TMP_PATH): [$(ls -aCmN $TMP_PATH)]"
+    echo "$ sh: files in INSTALL_PATH ($INSTALL_PATH): [$(ls -A $INSTALL_PATH)]"
+    echo "$ sh: files in TMP_PATH ($TMP_PATH): [$(ls -A $TMP_PATH)]"
 }
 
 function start() {
@@ -81,6 +81,6 @@ install
 start
 
 echo "$ sh: now it will only show recent logs. you can exit with ctrl+c."
-tail -n30 -f "$LOG_PATH"
+sudo tail -n30 -f "$LOG_FILEPATH"
 
 /bin/bash

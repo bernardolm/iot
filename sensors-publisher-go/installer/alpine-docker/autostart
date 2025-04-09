@@ -9,12 +9,12 @@
 
 #command_user="root"
 
-# command="/usr/share/$RC_SVCNAME/$RC_SVCNAME"
+# command="/$RC_SVCNAME/$RC_SVCNAME"
 
-command="/usr/share/sensors-publisher-go/sensors-publisher-go"
+command="/sensors-publisher-go/sensors-publisher-go"
 
-# directory="/usr/share/$RC_SVCNAME"
+# directory="/$RC_SVCNAME"
 
-directory="/usr/share/sensors-publisher-go"
+directory="/sensors-publisher-go"
 
 # pidfile="/var/run/$RC_SVCNAME.pid"

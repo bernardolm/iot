@@ -1,6 +1,6 @@
 [Service]
-ExecStart=/usr/share/sensors-publisher-go/sensors-publisher-go
-WorkingDirectory=/usr/share/sensors-publisher-go
+ExecStart=/sensors-publisher-go/sensors-publisher-go
+WorkingDirectory=/sensors-publisher-go
 Restart=always
 StandardOutput=journal+console
 StandardError=journal+console
