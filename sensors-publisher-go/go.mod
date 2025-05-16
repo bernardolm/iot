@@ -3,13 +3,14 @@ module github.com/bernardolm/iot/sensors-publisher-go
 go 1.23
 
 require (
-	github.com/aws/aws-sdk-go v1.55.6
+	github.com/aws/aws-sdk-go v1.55.7
 	github.com/eclipse/paho.mqtt.golang v1.5.0
 	github.com/influxdata/influxdb-client-go v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/cast v1.7.1
+	github.com/spf13/cast v1.8.0
 	github.com/yryz/ds18b20 v0.0.0-20200527154408-4a8f84bb82d4
+	github.com/yukitsune/lokirus v1.0.1
 )
 
 require (
