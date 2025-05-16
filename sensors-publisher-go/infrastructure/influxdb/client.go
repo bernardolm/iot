@@ -33,16 +33,15 @@ func connect(_ context.Context) {
 	client = influx.NewClientWithOptions(url, token, opts)
 
 	if client == nil {
-		log.Fatal("influxdb: couldn't create a client")
+		log.Error("influxdb: couldn't create a client")
 		return
 	}
 
 	healthcheck, err := client.Health(context.Background())
 	if err != nil {
-		log.WithError(err).Fatal("influxdb: health check failed")
+		log.WithError(err).Error("influxdb: health check failed")
 	}
 
-	log.WithField("status", healthcheck.Status).
-		WithField("message", *healthcheck.Message).
-		Info("influxdb: connected")
+	log.WithField("healthcheck_status", healthcheck.Status).
+		Infof("influxdb: connected, %v", *healthcheck.Message)
 }

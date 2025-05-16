@@ -16,8 +16,11 @@ type flow struct {
 	publishers []publisher.Publisher
 }
 
-func (a *flow) Start(ctx context.Context) {
-	messages := a.formatter.Build(a.sensor)
+func (a *flow) Start(ctx context.Context) error {
+	messages, err := a.formatter.Build(a.sensor)
+	if err != nil {
+		return err
+	}
 
 	for _, p := range a.publishers {
 		for _, m := range messages {
@@ -26,4 +29,6 @@ func (a *flow) Start(ctx context.Context) {
 			}
 		}
 	}
+
+	return nil
 }

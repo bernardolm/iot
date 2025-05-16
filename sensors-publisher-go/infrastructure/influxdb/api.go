@@ -16,7 +16,7 @@ func getAPI(ctx context.Context) influxapi.WriteAPI {
 		errorsCh := api.Errors()
 		go func() {
 			for err := range errorsCh {
-				log.Fatalf("influxdb: api write error - %s\n", err.Error())
+				log.Errorf("influxdb: api write error - %s\n", err.Error())
 			}
 		}()
 	}

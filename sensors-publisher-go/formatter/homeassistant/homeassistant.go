@@ -3,7 +3,6 @@ package homeassistant
 import (
 	"github.com/bernardolm/iot/sensors-publisher-go/message"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -22,7 +21,7 @@ type homeassistant struct {
 	stateTopic          string
 }
 
-func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
+func (a *homeassistant) Build(s sensor.Sensor) ([]message.Message, error) {
 	messages := []message.Message{}
 
 	if !a.hasSentConfig {
@@ -43,8 +42,7 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 
 	state, err := a.state(s)
 	if err != nil {
-		log.Error(err)
-		return nil
+		return nil, err
 	}
 
 	messages = append(messages, message.Message{
@@ -57,7 +55,7 @@ func (a *homeassistant) Build(s sensor.Sensor) []message.Message {
 		Body:  []byte("online"),
 	})
 
-	return messages
+	return messages, nil
 }
 
 func New(s sensor.Sensor) (*homeassistant, error) {

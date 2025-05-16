@@ -21,7 +21,7 @@ func Send(ctx context.Context, _ string, payload interface{}) {
 
 	log.
 		WithField("payload", fmt.Sprintf("%s", payload)).
-		Info("influxdb: sent (writed)")
+		Info("influxdb: sent")
 }
 
 func Finish(ctx context.Context) {

@@ -3,18 +3,16 @@ package influxdb
 import (
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/bernardolm/iot/sensors-publisher-go/message"
 	"github.com/bernardolm/iot/sensors-publisher-go/sensor"
 )
 
 type influxdb struct{}
 
-func (a *influxdb) Build(s sensor.Sensor) []message.Message {
+func (a *influxdb) Build(s sensor.Sensor) ([]message.Message, error) {
 	value, err := s.Get()
 	if err != nil {
-		log.Panic(err)
+		return nil, err
 	}
 
 	line := fmt.Sprintf("%s,entity_id=%s %s=%f",
@@ -25,7 +23,7 @@ func (a *influxdb) Build(s sensor.Sensor) []message.Message {
 
 	messages := []message.Message{{Body: []byte(line)}}
 
-	return messages
+	return messages, nil
 }
 
 func New(s sensor.Sensor) (*influxdb, error) {

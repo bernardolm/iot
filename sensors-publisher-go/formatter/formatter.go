@@ -6,5 +6,5 @@ import (
 )
 
 type Formatter interface {
-	Build(s sensor.Sensor) []message.Message
+	Build(s sensor.Sensor) ([]message.Message, error)
 }
