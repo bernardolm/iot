@@ -6,7 +6,7 @@ echo "sh: starting..."
 
 source ./installer/clear.sh
 
-NOW=$(date +"%y%m%d_%H%M%S")
+NOW=$(date +"%Y%m%d_%H%M%S_%3N")
 export RUN_FILE="sensors-publisher-go-installer_${NOW}.run"
 
 source ./installer/build.sh
