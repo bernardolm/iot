@@ -16,7 +16,7 @@ cp -f bin/sensors-publisher-go dist/
 
 cp -f installer/prod.env dist/.env
 cat installer/install.env >> dist/.env
-cp -f "installer/${OS}/autostart" "installer/${OS}/local.sh" dist/
+cp -f "installer/${OS}/local.sh" dist/
 
 echo "in dist" && ls dist
 
@@ -24,11 +24,11 @@ echo "in dist" && ls dist
 
 export $(grep -v '^#' ./dist/.env | xargs)
 
-sed -i "s/#WORKER#/${WORKER_USER}/g" dist/autostart
+envsubst < installer/${OS}/autostart > dist/autostart
 
-# cat dist/autostart
+cat dist/autostart
 
-[ ! -d "installer/tmp" ] && mkdir installer/tmp
+[ ! -d "installer/tmp" ] && mkdir -p installer/tmp
 
 ../makeself/makeself.sh --notemp --nox11 dist/ "installer/tmp/${RUN_FILE}" \
 	"ms: installing..." "./local.sh" 1>/dev/null

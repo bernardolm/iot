@@ -1,5 +1,5 @@
 __debug*
-*.env*
+*.env
 *.txt
 bin
 console*

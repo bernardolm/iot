@@ -1,6 +1,5 @@
 #!/sbin/openrc-run
 
-# command_user="#WORKER#"
 command_background=true
 command_progress=false
 command_user="root"

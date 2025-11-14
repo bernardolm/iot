@@ -28,7 +28,7 @@ func connect(_ context.Context) {
 			InsecureSkipVerify: true,
 		})
 
-	log.Debugf("influxdb: connecting to '%q' with '%q'", url, token)
+	log.Debugf("influxdb: connecting to %q with %q", url, token)
 
 	client = influx.NewClientWithOptions(url, token, opts)
 
